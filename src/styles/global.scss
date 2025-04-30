@@ -112,6 +112,25 @@ a {
   }
 }
 
+// External links
+a[target='_blank'] {
+  position: relative;
+  padding-right: 1.2em;
+
+  &::after {
+    content: '↗';
+    position: absolute;
+    right: 0;
+    font-size: 0.9em;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
 // Responsive typography
 @media (max-width: 768px) {
   h1 {
