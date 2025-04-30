@@ -27,7 +27,7 @@ const sortedPosts = posts.sort(
                 title: post.data.title,
                 date: post.data.date,
                 excerpt: post.data.excerpt || post.data.summary || '',
-                path: `blog/${post.slug}`,
+                path: `/blog/${post.slug}`,
                 tags: post.data.tags || [],
                 featuredImage: post.data.featuredImage,
               }}
