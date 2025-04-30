@@ -42,9 +42,9 @@ const truncatedExcerpt =
       <p class="card-text">{truncatedExcerpt}</p>
       {
         post.tags && post.tags.length > 0 && (
-          <div class="mt-2">
+          <div class="mt-2 tag-container">
             {post.tags.map((tag: string) => (
-              <a href={`/blog/tag/${tag}`} class="tag-link" data-no-bubble>
+              <a href={`/blog/tag/${tag.toLowerCase()}`} class="tag-link">
                 {tag}
               </a>
             ))}
@@ -94,6 +94,10 @@ const truncatedExcerpt =
   a:hover .card-img-top img {
     transform: scale(1.05);
   }
+  .tag-container {
+    position: relative;
+    z-index: 1;
+  }
   .tag-link {
     display: inline-block;
     padding: 0.35em 0.65em;
@@ -115,8 +119,5 @@ const truncatedExcerpt =
     background-color: #343a40;
     color: #fff;
     transform: translateY(-1px);
-  }
-  [data-no-bubble] {
-    pointer-events: none;
   }
 </style>

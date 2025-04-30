@@ -6,14 +6,16 @@ import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
-  const tags = new Set(posts.flatMap((post: CollectionEntry<'posts'>) => post.data.tags || []));
+  const tags = new Set<string>(
+    posts.flatMap((post: CollectionEntry<'posts'>) => post.data.tags || [])
+  );
 
   return Array.from(tags).map((tag) => ({
-    params: { tag },
+    params: { tag: tag.toLowerCase() },
     props: {
-      tag,
+      tag: tag.toLowerCase(),
       posts: posts.filter((post: CollectionEntry<'posts'>) =>
-        post.data.tags?.includes(tag)
+        post.data.tags?.map((t: string) => t.toLowerCase()).includes(tag.toLowerCase())
       ) as CollectionEntry<'posts'>[],
     },
   }));

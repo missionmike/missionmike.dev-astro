@@ -53,7 +53,7 @@ const tags = getAllTags();
             <h2 class={styles.h2}>Tags &amp; Categories</h2>
             {
               tags.map((tag) => (
-                <a href={`/blog/tag/${tag}`} class={styles.tagLink}>
+                <a href={`/blog/tag/${tag.toLowerCase()}`} class={styles.tagLink}>
                   {tag}
                 </a>
               ))
