@@ -25,6 +25,10 @@ const tags = getAllTags();
             software engineer on a mission to <br />
             innovate, inspire &amp; iterate
           </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
           <SocialBar />
           <div class={styles.imageFrame}>
             <div class="image-wrapper">
@@ -40,10 +44,10 @@ const tags = getAllTags();
           </div>
         </div>
         <div class="col-lg d-flex flex-column justify-content-center">
-          <div>
-            <span class={styles.h2}>Latest post:</span>
-            <BlogPreview post={latestPost} />
-          </div>
+          <span class={styles.h2}>Latest post:</span>
+          <BlogPreview post={latestPost} />
+        </div>
+        <div class="row mt-5">
           <div>
             <br />
             <h2 class={styles.h2}>Tags &amp; Categories</h2>
@@ -59,18 +63,18 @@ const tags = getAllTags();
       </div>
     </div>
   </div>
+
+  <style>
+    .image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .object-fit-cover {
+      object-fit: cover;
+    }
+  </style>
 </Layout>
-
-<style>
-  .image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .object-fit-cover {
-    object-fit: cover;
-  }
-</style>

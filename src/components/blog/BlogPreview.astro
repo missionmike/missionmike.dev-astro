@@ -9,6 +9,8 @@ interface Post {
 }
 
 const { post } = Astro.props;
+const truncatedExcerpt =
+  post.excerpt.length > 150 ? post.excerpt.slice(0, 150) + '...' : post.excerpt;
 ---
 
 <a href={post.path} class="text-decoration-none">
@@ -37,7 +39,7 @@ const { post } = Astro.props;
           })
         }
       </p>
-      <p class="card-text">{post.excerpt}</p>
+      <p class="card-text">{truncatedExcerpt}</p>
       {
         post.tags && post.tags.length > 0 && (
           <div class="mt-2">
