@@ -12,94 +12,98 @@ import { Image } from 'astro:assets';
       <div class="col-lg-8">
         <h1 class="mb-4">Who is this guy?</h1>
 
-        <p>
-          Growing up, Michael Dinerstein was one of those kids who would take things apart and put
-          them back together just to see how they “ticked.”
-        </p>
-        <p>
-          Understanding the basics was never enough. His interests weren’t just technical — they
-          were also creative.
-        </p>
-        <p>
-          Playing guitar at church services led to learning about live sound. When his parents got
-          family a PC in the mid-90s his curiosity led him to learn the computer’s inner-workings.
-          While learning Microsoft BASIC, his first bit of code was, not surprisingly, a program
-          that generated tones to play a melody.
-        </p>
-        <p>
-          After high school, Michael (aka "Mission Mike") set his sights on pursuing something that
-          would enable him to utilize both his artistic and technical inclinations.
-        </p>
-        <p>
-          This ultimately led to Web Design & Development. This career path allowed him to
-          incorporate his creative eye with a love of programming, analytical thinking, and
-          learning.
-        </p>
-        <p>
-          Michael has been married to his lovely wife Yohana since 2012. They have five adoring
-          children. He’s looking forward to seeing if his kids might also want to know how things
-          “tick.”
-        </p>
+        <div class="about-content">
+          <div class="profile-image">
+            <Image
+              src="/static/images/missionmike-profile.jpeg"
+              alt="Michael Dinerstein's profile photo"
+              width={200}
+              height={200}
+              class="rounded-circle"
+            />
+          </div>
 
-        <h2 class="h4 mb-3">What I Do</h2>
-        <p>
-          I specialize in full-stack development with a focus on modern web technologies. My
-          expertise includes:
-        </p>
-        <ul class="list-unstyled">
-          <li><i class="fas fa-code me-2"></i>Full-Stack Web Development</li>
-          <li><i class="fas fa-paint-brush me-2"></i>UI/UX Design</li>
-          <li><i class="fas fa-mobile-alt me-2"></i>Responsive Applications</li>
-          <li><i class="fas fa-database me-2"></i>Database Architecture</li>
-          <li><i class="fas fa-cloud me-2"></i>Cloud Infrastructure</li>
-        </ul>
+          <p>
+            Growing up, Michael Dinerstein was one of those kids who would take things apart and put
+            them back together just to see how they "ticked."
+          </p>
+          <p>
+            Understanding the basics was never enough. His interests weren't just technical — they
+            were also creative.
+          </p>
+          <p>
+            Playing guitar at church services led to learning about live sound. When his parents got
+            family a PC in the mid-90s his curiosity led him to learn the computer's inner-workings.
+            While learning Microsoft BASIC, his first bit of code was, not surprisingly, a program
+            that generated tones to play a melody.
+          </p>
+          <p>
+            After high school, Michael (aka "Mission Mike") set his sights on pursuing something
+            that would enable him to utilize both his artistic and technical inclinations.
+          </p>
+          <p>
+            This ultimately led to Web Design & Development. This career path allowed him to
+            incorporate his creative eye with a love of programming, analytical thinking, and
+            learning.
+          </p>
+          <p>
+            Michael has been married to his lovely wife Yohana since 2012. They have five adoring
+            children. He's looking forward to seeing if his kids might also want to know how things
+            "tick."
+          </p>
 
-        <h2 class="h4 mb-3">My Journey</h2>
-        <p>
-          My career has been marked by continuous learning and growth. From my early days as a
-          Junior Graphic Designer to becoming a Lead Developer, I've always pushed boundaries and
-          embraced new challenges. I believe in automating processes, writing clean code, and
-          creating solutions that make a real impact.
-        </p>
-        <p>
-          I'm passionate about sharing knowledge and experiences through my blog, where I write
-          about software development, career growth, and the intersection of technology and
-          creativity.
-        </p>
+          <h2 class="mb-3">What I Do</h2>
+          <p>
+            I specialize in full-stack development with a focus on modern web technologies. My
+            expertise includes:
+          </p>
+          <ul class="list-unstyled">
+            <li><i class="fas fa-code me-2"></i>Full-Stack Web Development</li>
+            <li><i class="fas fa-paint-brush me-2"></i>UI/UX Design</li>
+            <li><i class="fas fa-mobile-alt me-2"></i>Responsive Applications</li>
+            <li><i class="fas fa-database me-2"></i>Database Architecture</li>
+            <li><i class="fas fa-cloud me-2"></i>Cloud Infrastructure</li>
+          </ul>
 
-        <h2 class="h4 mb-3">Get in Touch</h2>
-        <p>
-          I'm always interested in connecting with fellow developers and discussing new projects.
-          Feel free to reach out through my social media channels or email.
-        </p>
-        <div class="d-flex gap-3 mt-3">
-          <a
-            href="https://github.com/missionmike"
-            class="btn btn-outline-dark"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <i class="fab fa-github me-2"></i>GitHub
-          </a>
-          <a
-            href="https://linkedin.com/in/michaeldinerstein"
-            class="btn btn-outline-primary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <i class="fab fa-linkedin me-2"></i>LinkedIn
-          </a>
-          <a
-            href="https://twitter.com/missionmike"
-            class="btn btn-outline-info"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <i class="fab fa-twitter me-2"></i>Twitter
-          </a>
-          <a href="mailto:contact@missionmike.com" class="btn btn-outline-secondary">
-            <i class="fas fa-envelope me-2"></i>Email
-          </a>
+          <h2 class="mb-3">My Journey</h2>
+          <p>
+            My career has been marked by continuous learning and growth. From my early days as a
+            Junior Graphic Designer to becoming a Lead Developer, I've always pushed boundaries and
+            embraced new challenges. I believe in automating processes, writing clean code, and
+            creating solutions that make a real impact.
+          </p>
+          <p>
+            I'm passionate about sharing knowledge and experiences through my blog, where I write
+            about software development, career growth, and the intersection of technology and
+            creativity.
+          </p>
+
+          <h2 class="mb-3">Get in Touch</h2>
+          <p>
+            I'm always interested in connecting with fellow developers and discussing new projects.
+            Feel free to reach out through my social media channels or email.
+          </p>
+          <div class="d-flex gap-3 mt-3">
+            <a
+              href="https://github.com/missionmike"
+              class="btn btn-outline-dark"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fab fa-github me-2"></i>GitHub
+            </a>
+            <a
+              href="https://linkedin.com/in/michaeldinerstein"
+              class="btn btn-outline-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fab fa-linkedin me-2"></i>LinkedIn
+            </a>
+            <a href="mailto:md@missionmike.dev" class="btn btn-outline-secondary">
+              <i class="fas fa-envelope me-2"></i>Email
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -109,6 +113,27 @@ import { Image } from 'astro:assets';
         font-size: 2.5rem;
         font-weight: 700;
         color: #333;
+      }
+
+      .about-content {
+        position: relative;
+      }
+
+      .profile-image {
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        float: right;
+        margin: 0 0 1rem 2rem;
+        shape-outside: circle(50%);
+      }
+
+      .profile-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .card {
@@ -137,6 +162,14 @@ import { Image } from 'astro:assets';
         width: 1.5rem;
         text-align: center;
       }
+
+      @media (max-width: 768px) {
+        .profile-image {
+          float: none;
+          margin: 0 auto 2rem;
+          display: block;
+        }
+      }
     </style>
-  </div></Layout
->
+  </div>
+</Layout>

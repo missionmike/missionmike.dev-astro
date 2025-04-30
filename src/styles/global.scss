@@ -116,7 +116,7 @@ a {
 a[target='_blank'] {
   position: relative;
 
-  &:not(.social-link) {
+  &:not(.social-link, .btn) {
     padding-right: 1.2em;
 
     &::after {
