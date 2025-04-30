@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="About | Mission Mike"
+  description="Learn more about Mission Mike and his journey in software development."
+>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h1 class="mb-4">About Mission Mike</h1>
+        
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h4 mb-3">Who I Am</h2>
+            <p>
+              I'm a passionate software developer dedicated to creating meaningful solutions and sharing knowledge with the community. 
+              With a focus on modern web technologies and best practices, I strive to build applications that make a difference.
+            </p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h4 mb-3">What I Do</h2>
+            <p>
+              I specialize in full-stack development, with expertise in:
+            </p>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-code me-2"></i>Web Development</li>
+              <li><i class="fas fa-mobile-alt me-2"></i>Mobile Applications</li>
+              <li><i class="fas fa-database me-2"></i>Database Design</li>
+              <li><i class="fas fa-cloud me-2"></i>Cloud Architecture</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2 class="h4 mb-3">Get in Touch</h2>
+            <p>
+              I'm always interested in connecting with fellow developers and discussing new projects. 
+              Feel free to reach out through my social media channels or email.
+            </p>
+            <div class="d-flex gap-3 mt-3">
+              <a href="https://github.com/missionmike" class="btn btn-outline-dark">
+                <i class="fab fa-github me-2"></i>GitHub
+              </a>
+              <a href="https://linkedin.com/in/missionmike" class="btn btn-outline-primary">
+                <i class="fab fa-linkedin me-2"></i>LinkedIn
+              </a>
+              <a href="mailto:contact@missionmike.com" class="btn btn-outline-secondary">
+                <i class="fas fa-envelope me-2"></i>Email
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .btn {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+</style> 

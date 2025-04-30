@@ -1,0 +1,376 @@
+---
+title: 'Headless WordPress & Next.js on Kubernetes: Page Revalidation and CDN Invalidation'
+date: '2023-03-26'
+tags: ['next.js', 'react', 'wordpress', 'kubernetes']
+draft: false
+featuredImage: blog/robot-person-at-a-desk-weird.jpeg
+summary: >
+  If you're looking to revalidate a Next.js page automatically after a WordPress post update, read
+  on! The technique can be applied to any back-end using Next.js for the front-end, hosted in a
+  Kubernetes cluster.
+---
+
+<Aside>
+  Update 2023/04/12: This article in its current state only addresses 75% of the problem. An update
+  is forthcoming to include the process to clear the CDN of the relevant NextJS .json data files.
+</Aside>
+
+## The Problem
+
+The problem faced is not unique: following a post update on back-end, we want to have the front-end
+automatically _revalidate the page_ in order to cache the latest content in the Next.js page cache.
+Then, if we're using a CDN on top of that, we want to automatically purge that same path in the CDN
+as well.
+
+## The Solution
+
+This solution is based on the premise that the front-end _and_ back-end are both hosted in the same
+Kubernetes cluster. With this setup, the front-end and back-end pods can communicate directly
+without needing to leave their local network.
+
+If your setup does not have the front-end and back-end pods sharing the same cluster, there _is_ a
+workaround, although it's not quite as efficient.
+
+In a nutshell, here's how we can handle this issue if both front-end and back-end are in the same
+cluster:
+
+**When a post is updated in the back-end, we need to trigger the following:**
+
+1. Make a request to Kubernetes to get a list of all front-end pod IP addresses.
+2. Send simultaneous async Next.js API requests to _each_ front-end pod to
+   [revalidate a path.](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration#on-demand-revalidation)
+3. If all requests return successfully, send one final request to the CDN to clear the path from CDN
+   cache.
+
+If the front-end and back-end are _not_ in the same cluster, here are similar steps which can
+accomplish the same:
+
+**When post is updated in back-end, we'd need to:**
+
+1. Make a _single_ Next.js API request to the front-end to revalidate a path.
+2. The receiving Next.js pod requests a list of its neighboring front-end pod IPs from Kubernetes.
+3. The Next.js pod sends simultaneous async requests to all neighboring front-end pods to revalidate
+   the same path(s).
+4. If all requests return successfully, the pod sends one final request to the CDN to clear the path
+   from CDN cache.
+
+As you can see, they're similar approaches, but the 2nd version requires an additional network
+request, which can cause the entire process to take _slightly_ longer.
+
+For this article, we'll focus on the **first** approach.
+
+**Here we go!**
+
+## Step 1: Set up a `kubectl` "Sidecar" for Kubernetes
+
+First, set up a
+["sidecar"](https://kubernetes.io/docs/tasks/run-application/access-api-from-pod/#using-kubectl-proxy)
+pod whose sole responsibility is to run
+[kubectl proxy](https://kubernetes.io/docs/tasks/extend-kubernetes/http-proxy-access-api/#using-kubectl-to-start-a-proxy-server).
+
+I set up `kubectl proxy` to run on port **8001**, which is closed to the rest of the internet from
+Kubernetes. This port would _only_ be used by local neighboring pods to make Kubernetes API
+requests.
+
+This sidecar pod doesn't need many resources; it can be set quite low. Perhaps 0.5 vCPU and 0.5GB
+memory.. experiment and find what works best for your system.
+
+<Aside>
+
+### But why can't I use a PHP package to get the Kubernetes pod list?
+
+When I was first exploring this problem, I attempted to use the
+[AWS PHP SDK](https://docs.aws.amazon.com/aws-sdk-php/v3/api/class-Aws.EKS.EKSClient.html). The SDK
+does have functions to describe clusters and node groups, but it couldn't _list **pods** and their
+associated details_. This was a problem, and I needed to come up with an alternate solution.
+
+> Note: If you do find a PHP package that's well-supported and can list Kubernetes pods within AWS,
+> please share! If something like this is available, then the "sidecar" is not required.
+
+</Aside>
+
+### The "Sidecar" Code
+
+The `kubectl proxy` "sidecar" pod is based on a Docker image. Here's a simplified, generic version
+of what I used:
+
+<CodeHeader>kubectl.dockerfile</CodeHeader>
+
+```bash
+# Using AWS CLI as base image because as part of the build process,
+# we need to use AWS credentials to gain access and set the default
+# kubectl cluster.
+FROM amazon/aws-cli:latest
+
+# Replace with your specific info:
+ARG AWS_ARN=arn:aws:eks:us-east-1:1234567890:cluster
+ARG CLUSTER_NAME=the-cluster-name
+ARG AWS_REGION=us-east-1
+ARG ARCH=arm64
+
+# 1.24.x was throwing an error during build. Using 1.23.6 for now.
+ARG KUBECTL_VERSION=1.23.6
+
+# Provide these args securely during the build command via --build-arg
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
+# Install kubectl dependency. There is code in the back-end which needs to list and ping
+# specific running pods. In order to do this, we need to use the kubectl API. The reason for this,
+# is that the latest PHP SDK for AWS does not appear to be able to list pods itself.
+RUN curl -LO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl"
+RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# Configure AWS EKS and kubectl for the specific cluster.
+RUN aws eks --region ${AWS_REGION} update-kubeconfig --name ${CLUSTER_NAME}
+RUN kubectl config use-context ${AWS_ARN}/${CLUSTER_NAME}
+
+# Copy kubectl proxy startup script so it can be used in container.
+COPY kubectl.sh /usr/src/
+RUN chmod +x /usr/src/kubectl.sh
+
+ENTRYPOINT [ "sh", "/usr/src/kubectl.sh" ]
+```
+
+The contents of `kubectl.sh` startup script is as follows:
+
+<CodeHeader>kubectl.sh</CodeHeader>
+
+```bash
+#!/bin/bash
+
+# This opens up kubectl access via API endpoint for the kubectl pod.
+# Attempted access to port 8001 (where kubectl proxy serves from) will be
+# allowed from any local host with access to port 8001 in the cluster.
+# Specific paths can be allowed, and accepted hosts can be further restricted.
+kubectl proxy --address 0.0.0.0 \
+    --accept-hosts '.*' \
+    --accept-paths '^/api/v1/namespaces/default/pods*'
+```
+
+When this `kubectl` (name can vary or be customized, of course) pod gets built and deployed to the
+Kubernetes cluster, we should have a `kubectl` pod available locally which can be accessed via HTTP.
+For example, to get our list of pods within the cluster, we could make a `GET` request to:
+`http://kubectl:8001/api/v1/namespaces/default/pods`
+
+## Back-end (WordPress)
+
+With the sidecar now set up, we can prepare the back-end code for WordPress in PHP. For brevity, I'm
+going to skip all the fundamental error handling and scaffolding required to write some proper
+classes and tests to support this. Let's skip straight to the main points.
+
+Here's a helper function that we'll use to fetch a list of local pod IP addresses:
+
+```php
+function get_front_end_pod_ip_addresses() {
+  // Don't forget to check for errors, handle exceptions and validate data!
+  $front_end_service_name = "your-front-end-service-name";
+
+  // Fetch a list of pods from the kubectl sidecar container.
+  $kubectl_api_result      = wp_remote_get( "http://kubectl:8001/api/v1/namespaces/default/pods" );
+  $kubectl_api_result_body = wp_remote_retrieve_body( $kubectl_api_result );
+  $pods_list = json_decode( $kubectl_api_result_body );
+
+  // Prepare a list of Kubernetes Pod IP addresses.
+  $pod_ip_addresses = array();
+
+  // Overrides the pod IP for local development purposes.
+  // Value can be something like: host.docker.internal:3000
+  // We can use this value to make an actual call to the front-end
+  // Next.js development environment, for example.
+  $pod_ip_address_override = getenv( 'POD_IP_ADDRESS_OVERRIDE' );
+
+  foreach ( $pods_list->items as $pod ) {
+    if ( str_contains( $pod->metadata->name, $front_end_service_name ) ) {
+      // If $pod_ip_address_override is populated, we'll use that specific IP for each entry.
+      // We allow the function to process this far rather than returning these values early,
+      // so that we can be sure that the whole process works as intended.
+      $pod_ip_addresses[] = $pod_ip_address_override ? $pod_ip_address_override : $pod->status->podIP . ':3000';
+    }
+  }
+
+  return $pod_ip_addresses;
+}
+```
+
+This helper function is used to retrieve our list of local Kubernetes front-end pod IP addresses, to
+which we'll _then_ send
+[Next.js on-demand revalidation requests.](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration#on-demand-revalidation)
+
+Since this on-demand revalidation process is well-documented in the previous link, I will not go
+into details on setting that up here.
+
+See below for a function to leverage the front-end pods' on-demand ISR revalidation API:
+
+```php
+function revalidate_nextjs_cache( $relative_url = '' ) {
+  // Don't forget to check for errors, handle exceptions and validate data!
+
+  // Here's our helper in play:
+  $pod_ip_addresses = get_front_end_pod_ip_addresses();
+
+  $next_api_token = getenv( 'NEXT_API_TOKEN' );
+
+  // Prepare an array of POST requests to send asynchronously.
+  $requests = array();
+  foreach ( $pod_ip_addresses as $pod_ip_address ) {
+    $requests[] = array(
+      'url'  => "http://$pod_ip_address/api/revalidate?" . http_build_query(
+        array(
+          "secret" => $next_api_token,
+          "path"   => $relative_url,
+        )
+      ),
+      'type' => 'POST',
+    );
+  }
+
+  // https://developer.wordpress.org/reference/classes/requests/request_multiple/
+  // Note: it seems this Requests class is deprecated. Should be updated to use
+  // the new version...
+  $responses     = \Requests::request_multiple( $requests );
+  $response_data = array();
+
+  // Loop through each response and ensure all of them can be properly decoded.
+  /** @var Requests_Response|Requests_Exception_Transport_cURL $response */
+  foreach ( $responses as $response ) {
+    if ( is_a( $response, 'Requests_Exception_Transport_cURL' ) ) {
+      // Handle your exceptions...
+      return new \WP_Error( 'exception', __( $error_message, 'your-text-domain' ) );
+    }
+
+    if ( is_a( $response, 'Requests_Response' ) ) {
+      $response_data[] = json_decode( $response->body );
+    }
+  }
+
+  // Loop through each decoded response to ensure they've all succeeded to revalidate.
+  foreach ( $response_data as $data ) {
+    // If at least one of the revalidation attempts fails, the entire process fails.
+    if ( ! isset( $data->revalidated ) || true !== $data->revalidated ) {
+      $error_message = 'Unable to revalidate URL. Response: ' . wp_json_encode( $data ) . ' - URL: ' . $relative_url;
+      return new \WP_Error( 'failed-to-revalidate', __( $error_message, 'your-text-domain' ) );
+    }
+  }
+
+  // Success!
+  return true;
+}
+```
+
+**Note:** It should be fairly easy to modify this code to support an array of paths instead of a
+single path! This could be helpful to revalidate pages in bulk, say during a bulk post update.
+
+Finally, let's stitch these together to call this when a post is updated:
+
+```php
+function post_updated_handler( $post_id, $post_after, $post_before ) {
+  // Don't forget to check for errors, handle exceptions and validate data!
+
+  if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+    // We only want to revalidate the cache on the final save action, so skip this one.
+    return;
+  }
+
+  if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+    // There is no need to revalidate the cache for an autosave, either. Skip it.
+    return;
+  }
+
+  if ( 'publish' !== $post_after->post_status ) {
+    // Do not clear caches for drafts, private, future, etc.
+    // If we want to clear caches when a post is moved from one state to another, we'll
+    // need to leverage the transition_post_status action:
+    // https://developer.wordpress.org/reference/hooks/transition_post_status/
+    return;
+  }
+
+  // Retrive only the /relative/url/to/page/ (strip the domain).
+  $relative_url = str_replace( 'https://yourdomain.com/', '', get_the_permalink( $post_id ) );
+
+  // Let's revalidate this relative URL in front-end:
+  $next_result = revalidate_nextjs_cache( $relative_url );
+
+  // If the NextJS revalidation attempt fails, there's no need to attempt
+  // to invalidate the CDN. Exit early.
+  if ( is_wp_error( $next_result ) ) {
+    return $next_result;
+  }
+
+  $invalidation_id = invalidate_url_in_cdn( $relative_url );
+
+  // We could use this ID to link directly to the invalidation in AWS.
+  return $invalidation_id;
+}
+
+add_filter( 'post_updated', array( $this, 'post_updated_handler' ), 10, 3 );
+```
+
+**But wait! What is this `invalidate_url_in_cdn()` function??**
+
+See below. This one is based on AWS CloudFront, but you can modify the function to invalidate any
+CDN with API access.
+
+```php
+// https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/getting-started_installation.html
+use Aws\CloudFront\CloudFrontClient;
+use Aws\Exception\AwsException;
+
+function invalidate_url_in_cdn( $relative_url = '' ) {
+  // Don't forget to check for errors, handle exceptions and validate data!
+
+  // Set this any way you'd like. This is just an example.
+  $distribution_id = getenv( 'CLOUDFRONT_DISTRIBUTION_ID' );
+
+  // Set up the CloudFront client via AWS PHP SDK.
+  $cloudfront_client = new CloudFrontClient( array(
+    'version' => 'latest',
+    'region'  => 'us-east-1',
+  ) );
+
+  try {
+    // Generate a unique md5 string. Or set whatever you would like.
+    $caller_reference = md5( time() );
+
+    $result = $cloudfront_client->createInvalidation(
+      array(
+        'DistributionId'    => $distribution_id,
+        'InvalidationBatch' => array(
+
+          'CallerReference' => $caller_reference,
+          'Paths'           => array(
+            'Items'    => array( $relative_url ),
+            // Can be modified to use count( $urls ) if this function accepts an array of URLs.
+            'Quantity' => 1,
+          ),
+        ),
+      )
+    );
+
+    if ( isset( $result['Invalidation'] ) && isset( $result['Invalidation']['Id'] ) ) {
+      // Success! Return the ID string.
+      return $result['Invalidation']['Id'];
+    }
+
+    // Uh oh, couldn't find the invalidation ID...
+    $error_message = 'CloudFront Invalidation ID not found for attempted invalidation of ' . $relative_url;
+    return new \WP_Error( 'failed-to-invalidate-cdn', __( $error_message, 'your-text-domain' ) );
+
+  } catch ( AwsException $exception ) {
+    // Welp, we failed.
+    return new \WP_Error( 'aws-exception', __( $exception->getMessage(), 'your-text-domain' ) );
+  }
+}
+```
+
+## Conclusion
+
+That's the gist of it! Now when you update a post, page, etc. in WordPress, the front-end pods
+should revalidate the page, followed by a CDN cache clear on successful revalidation.
+
+If you have any questions, or run into any issues, please feel free to ping me on Twitter:
+[@missionmikedev](https://twitter.com/missionmikedev) or find me on
+[LinkedIn.](https://www.linkedin.com/in/michaeldinerstein/) I can't promise an answer, but I can
+promise a response :)

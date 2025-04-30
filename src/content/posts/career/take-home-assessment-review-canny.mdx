@@ -1,0 +1,567 @@
+---
+title: 'Take-Home Test Review: An Uncanny Rejection'
+date: '2024-11-26'
+updated: '2024-11-26'
+tags: ['career', 'technical interviews']
+featuredImage: blog/canny-rejection-email.png
+summary: >
+  This take-home coding assessment was a discouraging experience. Here's why, and how I believe
+  companies can improve this process for candidates.
+---
+
+## Preface
+
+I was laid off on August 5th, 2024. My position as a Senior Full Stack Developer was removed along
+with a few other roles at
+[The Real Deal](https://www.linkedin.com/company/therealdeal/posts/?feedView=all). As of the time of
+this writing, I've been hunting for my next role and have applied to over 200 positions. The market
+is rough right now.
+
+## 0: Finally, an Interview!
+
+I applied for a Senior Frontend Engineer position with
+[canny.io](https://canny.io/?utm_campaign=please_provide_constructive_feedback_to_your_rejected_candidates)
+in November, 2024. The
+[job listing on LinkedIn](https://www.linkedin.com/jobs/search/?currentJobId=4064305528) didn't
+include a salary range, but I took a chance on it anyway:
+
+<Image
+  src="/static/images/blog/canny-job-listing.png"
+  width={1228}
+  height={1934}
+  alt="LinkedIn job listing for Canny Senior Frontend Developer position"
+/>
+
+By this point in time, I had gone for **nine straight weeks** and **_over 100 applications_** since
+I had my last interview. I'd been applying for a variety of senior software engineering positions.
+
+A couple of days later, I received a request to move forward with the next steps of the interview
+process! I was ecstatic and excited - recharged after such a long drought.
+
+<Image
+  src="/static/images/blog/canny-invite.png"
+  width={1286}
+  height={888}
+  alt="Invite to take the assessment"
+/>
+
+Stoked!!
+
+<Image
+  src="/static/images/blog/canny-michael-first-response.png"
+  width={662}
+  height={273}
+  alt="My first response to the invite"
+/>
+
+Let's go! 🚀 🚀 🚀
+
+---
+
+## 1. Assessment Time
+
+The test was straightforward. Canny provided a link to download a zip file, which contained some
+source code for a backend and frontend application using Node and React.
+
+The candidate is supposed to spin up the frontend and backend, then work their way through four bugs
+called "Customer Issues."
+
+For each of the issues, I had to:
+
+1. Find the problem.
+1. Fix it.
+1. Draft a brief response to each customer.
+
+Below is what I submitted as my portion of the assessment:
+
+<Aside>
+
+### **Customer 1:** The page doesn't load, I see 'server error'.
+
+There were a string of issues here, I'll list them out in the order I found them.
+
+#### The Diagnosis
+
+1. The string `"server error"` was returned to the client instead of providing more details about
+   the underlying issue. I first modified the code to provide the specific error message:
+
+   ```js
+   // Original:
+   error(error) {
+    const data = JSON.stringify({
+      error: 'server error',
+    });
+   }
+
+   // Modified:
+   error(error) {
+    const data = JSON.stringify({
+      error, // Return the actual error here instead of "server error"
+    });
+   }
+   ```
+
+1. In the `HTTPServer` class, a call to `authenticateUser()` was failing with `"unauthorized"` -
+   however, this was misleading because the `catch()` block was catching the error and returning a
+   hard-coded string `"unauthorized"` instead of a reference to `error.message`. Ater fixing this,
+   the actual underlying error message is `"Missing name in user data"`:
+
+   ```js
+   // Original:
+   try {
+     await authenticateUser(request, data);
+   } catch (error) {
+     // ...
+     request.error('unauthorized');
+     return;
+   }
+
+   // Modified:
+   try {
+     await authenticateUser(request, data);
+   } catch (error) {
+     // ...
+     request.error(error.message); // Return the actual error message here.
+     return;
+   }
+   ```
+
+   This led me to the root cause...
+
+1. The actual error message buried in this thread of incorrectly-handled errors is
+   `"Missing name in user data"`. The root cause was within the dummy data in `AJAX.js`, the
+   `SSOToken` decoded has a `nayme` property (typo) instead of `name`. To find this, I used
+   [jwt.io](https://jwt.io/) to paste in the original token and check the values.
+
+   <Image
+     src="/static/images/blog/canny-jwt.png"
+     width={1198}
+     height={454}
+     alt="JWT.io screenshot"
+   />
+
+#### The Fix
+
+To fix, I used [jwt.io](https://jwt.io/) to rename `nayme` to `name` in the payload, then used the
+key value from `authenticateUser.js` to generate a new token.
+
+#### Response to Customer
+
+_"My apologies, it looks like we weren't passing the correct property name in the authorization
+token, which caused the server to fail the request. This has been resolved, please let me know if
+you run into this issue again. Thanks!"_
+
+<HorizontalRule />
+
+### **Customer 2:** When I select 'Old' or 'Top', the dropdown doesn't update.
+
+#### The Diagnosis
+
+This is a rendering issue, it looks like the component is not subscribed to changes to the `sort`
+object's values. As a result, it doesn't know the values were changed, so it doesn't update. I
+haven't used React Redux before, so I'm not familiar with this pattern.
+
+#### The Fix
+
+I fixed the issue by passing in the entire `sort` object to the `Selector` subcomponent. Then I
+determined whether an option was meant to be in the `selected` state based on the current value of
+`sort.name`. This seemed to do the trick in ensuring the component re-rendered.
+
+```jsx
+{
+  /* Original: */
+}
+<Selector onSelect={changeSort} selected={sort.sort} />;
+
+{
+  /* Modified: */
+}
+<Selector onSelect={changeSort} sort={sort} />;
+```
+
+```js
+// Then in the <Selector /> component, change the "selected" prop name to "sort"
+// and update a couple of conditional references.
+
+// Originals:
+const className = 'option' + (option.name === selected ? ' selected' : '');
+const option = Options.find((option) => option.name === selected);
+
+// Modified:
+const className = 'option' + (option.name === sort.sort ? ' selected' : '');
+const option = Options.find((option) => option.name === sort.sort);
+```
+
+#### Response to Customer
+
+_"Thank you for letting us know about this issue! There was a disconnect between the data and the
+component that was supposed to display it - this has been patched and resolved. Please reach out if
+you encounter anything else."_
+
+<HorizontalRule />
+
+### **Customer 3:** When I sort by 'Top', the posts aren't in order.
+
+#### The Diagnosis
+
+It looks like the sort method is using string comparison somewhere. String "28" ranks higher than
+"180" because the initial character "2" in "28" comes after "1" in "180"
+
+> Note: This was my first idea, however after looking at the code again, I see it's a flaw in the
+> custom algorithm.
+
+#### The Fix
+
+I had a hard time unraveling the custom algorithm because I'm not familiar with it. So I used a
+standard `.sort` method with a/b comparator function. This is not a great choice if there was a
+performance implication in sorting the data on the server, however I believe that overhead could
+potentially be offset with a more performant query on the database side -- or, I could spend more
+time figuring out where to patch within the algo. Open for discussion!
+
+```js
+// Original (common merge sort with a flaw):
+export default function sortBy(array, key, descending = false) {
+  const length = array.length;
+  if (length === 1) {
+    return array;
+  } else if (length === 2) {
+    const aValue = array[0][key];
+    const bValue = array[1][key];
+    if (bValue > aValue) {
+      return array;
+    }
+    return [array[0], array[1]];
+  }
+
+  const mid = Math.floor(length / 2);
+  const firstHalf = array.slice(0, mid);
+  const secondHalf = array.slice(mid, length);
+
+  const arrayOne = sortBy(firstHalf, key);
+  const arrayTwo = sortBy(secondHalf, key);
+
+  const merged = [];
+  while (arrayOne.length || arrayTwo.length) {
+    if (!arrayOne.length) {
+      merged.push(arrayTwo.shift());
+      continue;
+    }
+
+    if (!arrayTwo.length) {
+      merged.push(arrayOne.shift());
+      continue;
+    }
+
+    const valueOne = arrayOne[0][key];
+    const valueTwo = arrayTwo[0][key];
+    if (valueOne <= valueTwo) {
+      merged.push(arrayOne.shift());
+    } else if (valueTwo < valueOne) {
+      merged.push(arrayTwo.shift());
+    }
+  }
+
+  return descending ? merged.reverse() : merged;
+}
+
+// Modified:
+export default function sortBy(array, key, descending = false) {
+  return array.sort((a, b) => {
+    if (a[key] === b[key]) return 0; // The same value, no sorting needed.
+
+    // The value of `descending` determines whether or not to reverse the sort.
+    return (a[key] > b[key] ? 1 : -1) * (descending ? -1 : 1);
+  });
+}
+```
+
+#### Response to Customer
+
+_"Thank you for catching this! It looks like our sorting algorithm had a bug. This has been fixed,
+please let me know if all looks good on your end. Thank you!"_
+
+<HorizontalRule />
+
+### **Customer 4:** The vote counter in the top right of the page doesn't always update correctly.
+
+#### The Diagnosis
+
+This appears to be a render issues because the value of `votes` isn't changing, so the component
+doesn't re-render.
+
+#### The Fix
+
+I removed the separate `recountVotes` logic and included it directly within the state updates in the
+`PostsLoaded` reducer. This way, it's always updated on time and doesn't get delayed.
+
+```js
+    // Original:
+    case PostsLoaded: {
+      return {
+        ...state,
+        error: null,
+        pages: action.pages,
+        posts: action.posts,
+      };
+    }
+
+    case RecountVotes: {
+      // ...
+    }
+
+    // Modified:
+    case PostsLoaded: {
+      return {
+        ...state,
+        error: null,
+        pages: action.pages,
+        posts: action.posts,
+
+        // Remove the RecountVotes case and place logic within PostsLoaded here.
+        votes: action.posts.reduce((prev, post) => {
+          return prev + post.votes;
+        }, 0),
+      };
+    }
+```
+
+Then, in the `dispatch`:
+
+```js
+// Original:
+(dispatch) => ({
+  fetchPosts: (params) => {
+    dispatch(fetchPosts(params));
+    return dispatch(recountVotes());
+  },
+  // ...
+})
+
+// Modified:
+(dispatch) => ({
+  fetchPosts: (params) => {
+    return dispatch(fetchPosts(params));
+    // Removed the separate recountVotes dispatch.
+  },
+  // ...
+})
+```
+
+#### Response to Customer
+
+_"Thank you so much for letting us know about this issue. The underlying issue had to do with the
+order in which data was being processed after being fetched. We've fixed this issue, please do let
+us know if something else pops up!"_
+
+<HorizontalRule />
+
+### Notes on Solutions
+
+This assessment took me much longer to complete than I anticipated. This largely had to do with two
+areas:
+
+1. I got lost in the weeds on the divide & conquer algorithm. I'm not familiar enough with this, and
+   I spent too much time trying to fix what was in place rather than replacing it with something
+   that worked. In a team environment, this may not be the best approach though, and I'd spend more
+   time understanding the original code and fixing it in place if I felt it was better that way.
+1. I've never used React Redux before outside of a brief tutorial years ago. So I had to take a bit
+   of time to understand how the state was being handled. This ate up a bunch of time.
+
+---
+
+### Notes on My Assessment Experience
+
+Thank you for putting this assessment together!
+
+I found when troubleshooting and getting familiar with the code, I'd make some changes here and
+there - however, without `git` tracking in place, it was difficult to stay on top of where changes
+were made. For future test-takers, it would be much easier to be able to clone or fork a GitHub
+repo, then open a PR with the fixes. This would help with transparency in reviewing the changes, as
+well as during the dev/debugging process.
+
+Thanks again for your consideration!
+
+</Aside>
+
+**Phew!** What a test!
+
+This was supposed to take between _45 minutes_ and _2 hours_.... but I completed it in _just_ under
+2.5:
+
+<Image
+  src="/static/images/blog/canny-assessment-completed.png"
+  width={743}
+  height={421}
+  alt="Assessment completion screen"
+/>
+
+I followed up to let the recruiter know. This was on Monday, November 4th, 2024:
+
+<Image
+  src="/static/images/blog/canny-michael-second-response.png"
+  width={812}
+  height={267}
+  alt="My second response follow up after submitting"
+/>
+
+## 2. The Rejection
+
+Three days later, on Thursday 11/7, I received an email with the subject "Canny Assessment."
+
+Could this be it? Am I moving forward? Will I have a chance to discuss my submission with somebody
+from this company and learn more about the org?
+
+<Image
+  src="/static/images/blog/canny-rejection-email-full.png"
+  width={600}
+  height={361}
+  alt="The big rejection email"
+/>
+
+I read _"Unfortunately, we've decided not to move forward at this time."_ and my heart sank.
+
+However, this isn't the first rejection I've faced, so it didn't slow me down. This job just wasn't
+for me, oh well...
+
+I was truly curious, however, as to what drove this decision. The response was so canned and
+vague...
+
+- Was it my code?
+- Did they not like my sort?
+- Did I miss something in my debugging?
+- Was I supposed to refactor to clean up the codebase (it was really messy)?
+
+I had to ask.
+
+<Image
+  src="/static/images/blog/canny-michael-third-response.png"
+  width={647}
+  height={232}
+  alt="My third response follow up after submitting"
+/>
+
+I didn't receive a response.
+
+🦗 🦗 🦗
+
+For days.
+
+Until...
+
+I shared my story on LinkedIn and
+[my post went somewhat viral](https://www.linkedin.com/posts/michaeldinerstein_company-wont-tell-me-why-they-didnt-like-activity-7263100680138031104-Mlc5)
+(at least viral _to me_, as it's the most engagement I've ever had to date on LinkedIn!)
+
+Since Canny wasn't willing to provide feedback on my test, I decided to upload my test code to
+GitHub with hopes of getting some eyes on it. Then, I opened a PR with all my changes and described
+my thinking process and changes in comments. I received some feedback from comments on LinkedIn
+about the code and the discouraging experience I shared.
+
+Overall the feedback was quite uplifting and informative.
+
+I also learned that a few other people in the comments have gone through the same experience with
+the same company.
+
+Then I received a response to my email **11 days later**:
+
+<Image
+  src="/static/images/blog/canny-takedown-request.png"
+  width={1280}
+  height={1049}
+  alt="Code takedown request"
+/>
+
+At first I obliged, and left some feedback for them:
+
+<Image
+  src="/static/images/blog/canny-takedown-request-response.png"
+  width={1494}
+  height={848}
+  alt="Code takedown request response"
+/>
+
+...however, after more consideration, I decided to republish it.
+
+I felt like I was being punked when they spent time to request that I take down the repository and
+provide all their excuses why I should take it down... when they couldn't respond to my simple
+request for clarity on my assessment rejection.
+
+A few days later, I received a
+[DMCA copyright infringement notice](https://github.com/github/dmca/blob/master/2024/11/2024-11-22-canny.md)
+from GitHub. It seems that Canny reported the repository and had it
+[forcibly removed](https://github.com/missionmike/technical-assessment-review-canny).
+
+Oh well!
+
+## 3. Takeaways
+
+### Candidate Feedback is Important
+
+As a candidate, I was excited about the prospect of working for a new company that seems to tackle
+some interesting challenges. I spent time researching the company's website, learning about their
+product, and getting familiar with the team page. I wanted to be prepared to meet with them during
+my first interview! Because surely after this assessment there's an interview, right?
+
+Wrong (for me).
+
+There was an interview for someone.. maybe. Just not me.
+
+**And that's OK!**
+
+**This is the part that I wasn't OK with:** _"Unfortunately, we've decided not to move forward at
+this time."_
+
+Why isn't this OK? **It provides zero context.** No information about WHY we're not moving forward.
+
+- Did I fail the assessment?
+- If I failed... why? Which part? Some? All?
+- Did they even look at my code?
+- Did they hire someone else already before they could meet with me?
+- Did they close the role?
+
+So many questions. No answers.
+
+**I firmly believe that candidates should receive feedback from take-home assessments.** Even if
+it's brief, candidates deserve information.
+
+In this particular experience, Canny had the opportunity to provide feedback, especially after I
+asked them directly. Instead, they chose to ignore me, just as they disregard who-knows-how-many
+other candidates.
+
+### This Isn't Unique
+
+This situation isn't unique. I've gone through this with other companies before. It's rude and
+disrespectful.
+
+My Canny experience was a final straw and I decided to share my experience online. Normally I'd
+bottle it up and move on... but that is unhealthy.
+
+Sharing my story led to many conversation on LinkedIn, a DMCA takedown on GitHub, and finally this
+blog post - where I plan to keep this experience documented for myself and others.
+
+### Message to Companies and Hiring Managers
+
+If you are sending candidates take-home assessments as part of your process, you should budget a
+small amount of time to share reasons for rejection with those who don't move forward.
+
+Why?
+
+Because it's considerate and respectful.
+
+Perhaps it's been a while since you've been in need of work or had to interview, and you've
+forgotton all the stress and anxiety that goes along with that process. That's OK, it's easy to get
+comfortable and forget.
+
+However, now that you've been reminded - please make the hiring landscape a better place for all.
+
+### Message to Candidates
+
+Has this happened to you?
+
+Share it. Talk about it.
+
+It's not healthy to store up resentment. It's not OK for companies to treat us like this. Speak up
+and decompress. I did, and I sure do feel a lot better - and I made some new friends and connections
+along the way.
+
+Onward!

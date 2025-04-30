@@ -1,0 +1,35 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<aside class:list={["blog-aside", className]}>
+  <slot />
+</aside>
+
+<style>
+  .blog-aside {
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--accent);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .blog-aside :global(h3) {
+    color: var(--accent);
+    margin-top: 0;
+    font-size: 1.25rem;
+  }
+
+  .blog-aside :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .blog-aside :global(ul) {
+    margin-bottom: 1rem;
+  }
+</style> 

@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { components } from '../../components/mdx-components';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout
+  title={post.data.title}
+  description={post.data.excerpt}
+>
+  <article class="container py-5">
+    <header class="mb-4">
+      <h1>{post.data.title}</h1>
+      <time datetime={post.data.date}>
+        {new Date(post.data.date).toLocaleDateString()}
+      </time>
+    </header>
+    <Content components={components} />
+  </article>
+</Layout>
+
+<style>
+  article {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  time {
+    color: #666;
+    font-size: 0.9rem;
+  }
+</style> 

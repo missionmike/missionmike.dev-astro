@@ -1,0 +1,169 @@
+---
+title:
+  'Setting up WordPress Coding Standards (WPCS) with PHP_CodeSniffer (PHPCS) and PHP Formatting in
+  VS Code with Remote-SSH'
+date: '2021-11-24'
+tags: ['wordpress']
+draft: false
+featuredImage: blog/wordpress-phpcs-wp.webp
+---
+
+## The Scenario:
+
+- You’re working in VS Code.
+- You’re working on a WordPress project on a remote *staging server (*hopefully you’re not doing
+  this on production 😅)
+- You’d like to use [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) to lint your
+  PHP.
+- You’d like to leverage
+  [WordPress Coding Standards (WPCS)](https://github.com/WordPress/WordPress-Coding-Standards) as
+  your PHP standard.
+- You’d like to auto-format PHP to help adhere to these standards.
+
+### 1. Remote-SSH Setup
+
+The [Remote-SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh)
+extension for VS Code allows you to SSH into a host and edit code remotely as if you were working
+locally. You get to see remote file and folder structure, as well as install VS Code extensions to
+work with your remote project.
+
+Follow the Installation and Getting Started steps in the link above to install and activate the
+Remote-SSH extension in VS Code. Then connect to your remote host and change to your working
+directory. If you don’t already have it, install [Composer](https://getcomposer.org/download/)
+before the next step.
+
+### 2. Add PHP_CodeSniffer Standards Composer Installer Plugin
+
+Open the terminal in VS Code and run
+`composer require --dev dealerdirect/phpcodesniffer-composer-installer` in your project’s root
+directory to install the
+[PHP_CodeSniffer Standards Composer Installer Plugin](https://github.com/Dealerdirect/phpcodesniffer-composer-installer).
+
+### 3. Add WordPress Coding Standards via Composer
+
+Next, run `composer require --dev wp-coding-standards/wpcs` to install the
+[WordPress Coding Standards (WPCS)](https://github.com/WordPress/WordPress-Coding-Standards)
+definitions and make them available in your project.
+
+From here, you can run a command to see which coding standards are available to your local project.
+Example:
+
+<CodeHeader>Terminal</CodeHeader>
+
+```bash
+$ ./vendor/bin/phpcs -i The installed coding standards are MySource, PEAR, PSR1, PSR2, Squiz, Zend,
+PHPCompatibility, WordPress, WordPress-Core, WordPress-Docs, WordPress-Extra and WordPress-VIP
+```
+
+### 4. VS Code Extensions
+
+Now we’ll install two extensions in VS Code:
+
+**phpcs** – The
+[phpcs](https://marketplace.visualstudio.com/items?itemName=ikappas.phpcs#review-details) extension
+by Ioannis Kappas will enable VS Code to lint our PHP in real-time while we’re working in our code.
+Install and activate this extension in the Remote-SSH environment.
+
+**phpcbf** – The
+[phpcbf](https://marketplace.visualstudio.com/items?itemName=persoderlind.vscode-phpcbf) extension
+by Per Soderlind will enable VS Code to attempt to format our code according to the standard of
+choice. Install and activate this extension in the Remote-SSH environment as well.
+
+Once installed, open your command palette (Ctrl/Cmd + Shift + P) and find _“Preferences: Open Remote
+Settings (JSON) (SSH: [yourhost])”_
+
+Within `settings.json`, add the following settings (replace /home/path/to/project/ with your own
+path):
+
+```json
+{
+  "phpcs.enable": true,
+  "phpcs.executablePath": "/home/path/to/project/vendor/bin/phpcs",
+  "phpcs.standard": "WordPress",
+  "phpcbf.enable": true,
+  "phpcbf.documentFormattingProvider": true,
+  "phpcbf.onsave": true,
+  "phpcbf.executablePath": "/home/path/to/project/vendor/bin/phpcbf",
+  "phpcbf.standard": "WordPress",
+  "editor.formatOnSave": true
+}
+```
+
+**Note:** if you’re working on multiple WordPress projects within the same remote host, you may want
+to rerun steps 2 and 3 to install those dependencies in your user account, and update the
+`phpcs.executablePath` and `phpcbf.executablePath` values to point that shared location instead.
+
+Let’s Test it Out! Let’s see if it works! From the VS Code terminal in your Remote-SSH environment,
+at the root of your project enter `./vendor/bin/phpcs --report=source ./`
+
+If you have no errors or warnings, that’s great! But if you’re like me, you’ve got some issues to
+fix and a bunch of new work to do.
+
+PHPCS Sniff Output Lots of whiffs to fix! You can try manually adding a syntax error and re-running
+the test to see if it catches it. Also attempt to format your PHP to auto-fix some errors. PHPCBF
+does a great job at fixing many things automatically.
+
+### 5. PHPCS Overrides
+
+Depending on the project, you may not want PHPCS to complain about certain errors. There are options
+to include
+[code comments to ignore specific sniffs or parts of a file](https://github.com/squizlabs/PHP_CodeSniffer/wiki/Advanced-Usage#ignoring-parts-of-a-file),
+but sometimes we’d prefer to have some checks skipped globally.
+
+To accomplish this, create a `phpcs.xml` file in the root of your project. See below for a sample
+file with exclusions applied via `<exclude />` tags.
+
+```xml
+<?xml version="1.0"?>
+<ruleset name="My Project Rules">
+    <config name="minimum_supported_wp_version" value="4.4.0" />
+
+    <rule ref="WordPress-Core">
+        <!-- Exclude these sniffs -->
+        <exclude name="WordPress.WP.AlternativeFunctions" />
+        <exclude name="WordPress.WP.GlobalVariablesOverride" />
+        <exclude name="WordPress.DB.RestrictedClasses" />
+    </rule>
+    <rule ref="WordPress-Docs" />
+    <rule ref="WordPress-Extra" />
+
+    <!-- Check all PHP files in directory tree by default. -->
+    <arg name="extensions" value="php" />
+    <file>.</file>
+
+    <!-- Add exclude patterns here -->
+    <exclude-pattern>/tests/*</exclude-pattern>
+    <exclude-pattern>/vendor/*</exclude-pattern>
+</ruleset>
+```
+
+## Bonus: Using PHPCS in CI/CD
+
+Now that you have the PHPCS dev dependencies saved in `composer.json` as part of your project, you
+can leverage PHPCS within your CI/CD workflows to run PHP_CodeSniffer with WordPress Coding
+Standards and your own custom `phpcs.xml` overrides within your CI/CD pipeline.
+
+There are a couple of ways to do this:
+
+#1. Incorporate a `./vendor/bin/phpcs --report=summary .` (or variation) command within the pipeline
+after `composer install`
+
+#2. Add said command above as an npm script within `package.json`, then run that script during the
+pipeline (also after composer install.
+
+I prefer #2 because it allows me to define the specific PHPCS linting script in one location, and
+then call it from wherever needed: either locally, or within the pipeline. If I have this script,
+for example:
+
+```json
+...
+"scripts": {
+  "phpcs": "./vendor/bin/phpcs --report=summary ."
+},
+...
+```
+
+I can then use `npm run phpcs` locally whenever I feel like manually running phpcs, or I can include
+npm run phpcs at some point during my pipeline.
+
+**Until next time! Happy (clean) coding.**

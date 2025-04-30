@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import BlogPreview from '../../components/blog/BlogPreview.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const posts = await getCollection('posts');
+const sortedPosts = posts.sort((a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+---
+
+<Layout
+  title="Blog | Mission Mike"
+  description="Read about software development, career growth, and more from Mission Mike."
+>
+  <div class="container py-5">
+    <h1 class="mb-4">Blog Posts</h1>
+    <div class="row">
+      {sortedPosts.map((post: CollectionEntry<'posts'>) => (
+        <div class="col-md-6 mb-4">
+          <BlogPreview
+            post={{
+              title: post.data.title,
+              date: post.data.date,
+              excerpt: post.data.excerpt || post.data.summary || '',
+              path: `blog/${post.slug}`,
+              tags: post.data.tags || [],
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+  }
+</style> 

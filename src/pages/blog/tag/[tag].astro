@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import BlogPreview from '../../../components/blog/BlogPreview.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  const tags = new Set(posts.flatMap(post => post.data.tags || []));
+  
+  return Array.from(tags).map(tag => ({
+    params: { tag },
+    props: { 
+      tag,
+      posts: posts.filter(post => post.data.tags?.includes(tag))
+    }
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+---
+
+<Layout
+  title={`${tag} Posts | Mission Mike's Blog`}
+  description={`Read all posts tagged with ${tag} on Mission Mike's blog.`}
+>
+  <div class="container py-5">
+    <h1 class="mb-4">Posts tagged with "{tag}"</h1>
+    <div class="row">
+      {sortedPosts.map((post) => (
+        <div class="col-md-6 mb-4">
+          <BlogPreview
+            post={{
+              title: post.data.title,
+              date: post.data.date,
+              excerpt: post.data.excerpt,
+              path: `blog/${post.slug}`,
+              tags: post.data.tags || [],
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+  }
+</style> 

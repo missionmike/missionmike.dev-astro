@@ -1,0 +1,50 @@
+---
+title: 'Detect an Internet Explorer Visitor in GatsbyJS'
+date: '2021-07-21'
+tags: ['javascript', 'react', 'gatsbyjs']
+draft: false
+featuredImage: blog/gatsby-browser-ie.webp
+---
+
+Internet Explorer, amirite? While building a medium-traffic
+[WordPress + Gatsby](https://www.gatsbyjs.com/guides/wordpress/) site, I reviewed analytics to see
+how much Internet Explorer support I needed to provide. We had about 0.02% of visitors using IE in
+the past year, so a very small drop in the bucket.
+
+However, visitors are visitors, and I wanted to be sure they received a decent experience\*, even if
+they’re using an indecent browser\*\*. Who knows, perhaps they’re visiting from Windows Vista on
+Grandma’s computer, or from an outdated public library computer network.
+
+I didn’t want to layer up IE conditionals in the `<head>`, and I didn’t want to have an obtuse
+amount of JS in the bundle, just to detect IE.
+
+After some digging, I discovered that `document.documentMode` is an
+[IE-only property](https://www.w3schools.com/jsref/prop_doc_documentmode.asp)! Thank heavens! This
+meant I could add a quick snippet to gatsby-browser.js, and call it a day.
+
+Here’s the snip:
+
+<CodeHeader>gatsby-browser.js</CodeHeader>
+
+```javascript
+export const onClientEntry = () => {
+  /**
+   * Detect IE visitor
+   * @link https://www.w3schools.com/jsref/prop_doc_documentmode.asp
+   */
+  if (window && window.document && window.document.documentMode) {
+    /**
+     * Redirect IE visitor or show popup, etc.
+     */
+    window.location.href = '/unsupported/';
+  }
+};
+```
+
+Happy coding!
+
+\*By “decent experience” here, I mean… redirect them to a page asking the visitor to upgrade their
+browser. Not bending over backwards to polyfill everything for IE for 0.02%.
+
+\*\*By “indecent browser”… sorry not sorry. It’s always been a headache to build websites to support
+IE. Besides, it’s slated for retirement on June 15, 2022.

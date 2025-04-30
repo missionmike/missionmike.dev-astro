@@ -1,0 +1,63 @@
+---
+title: 'Getting Google My Business CID Codes, Quickly.'
+date: '2021-03-06'
+tags: ['seo']
+draft: false
+featuredImage: blog/seo-google-cid-script-executed.webp
+summary:
+  If you’ve worked with the Google My Business admin interface, you know that tracking down specific
+  details (especially when working with hundreds of listings) can be a daunting task.
+---
+
+If you’ve worked with the Google My Business admin interface, you know that tracking down specific
+details (especially when working with hundreds of listings) can be a daunting task. This often
+requires digging into individual listings to pull various insights and data.
+
+![Screenshot of Google My Business admin console.](/static/images/blog/seo-google-cid-gmb-admin.webp)
+
+Combing through all these listings and copy/pasting pertinent info into a spreadsheet is cumbersome
+at best. True, you can export most of the data, but as of the time of this writing, this data does
+not include the CID!
+
+This week, a member of the SEO team and I were working on updating the
+[schema.org markup](https://schema.org/LocalBusiness) and
+[JSON-LD](https://developers.google.com/search/docs/data-types/local-business) data for many unique
+location webpages. One item in particular that required attention is the
+[hasMap property.](https://authoritynw.com/blog/adding-schema-markup-to-maps-urls/) I was advised
+that this property is best used in tandem with a Google Maps URL in the format of
+`https://maps.google.com/maps?cid=YOURCIDNUMBER`
+
+The challenge we were faced with, was tracking down this CID number within Google My Business (GMB).
+After finding it, I had to plug it into a custom field used to populate the schema markup within our
+WordPress website. Sure, I could click into each GMB location, and find a link to the Maps listing,
+then parse the CID from the URL manually – but I didn’t want to lose an entire day on this mundane
+clicking + copy/paste.
+
+## The Solution: Executing JavaScript in the Console.
+
+![Screenshot of JavaScript code executed in the console to copy Google CIDs.](/static/images/blog/seo-google-cid-script-executed.webp)
+
+I wrote a quick
+[snippet of JavaScript](https://gist.github.com/missionmike/667bf157d7a0c11a17f097383a21b535) which,
+when pasted in the console, iterates through each row in the main GMB list of locations, and
+converts the data to tab-delimited TSV (Tab-Separated Values) format. It then copies this data to
+the clipboard (including a new column for the CID code, as well as a well-formatted Maps URL). The
+CID is parsed from the “See your profile” button.
+
+## Executing the Script in Console
+
+After running the script, the TSV data can be pasted directly to Excel or Google Sheets, etc.
+
+![Pasted TSV data into Google Sheets.](/static/images/blog/seo-google-cid-pasted-data.webp)
+
+Copying 200+ rows of GMB data straight from the admin interface table into a spreadsheet took a
+matter of seconds! And furthermore, the CID was present and readily available for use in our
+application!
+
+I hope this helps somebody out there, who may be faced with the same quest of “how can I quickly get
+all my Google My Business map CIDs from one place?”
+
+You can find the
+[code snippet here.](https://gist.github.com/missionmike/667bf157d7a0c11a17f097383a21b535) All that
+needs to be done, is copy/paste it in full into the console while viewing the Google My Business
+admin interface.

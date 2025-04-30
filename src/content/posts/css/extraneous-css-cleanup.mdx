@@ -1,0 +1,132 @@
+---
+title: 'Extraneous CSS Cleanup'
+date: '2020-08-14'
+tags: ['css']
+draft: false
+featuredImage: blog/css-statue.webp
+summary: >
+  Occasionally I need to spend time investigating an installation to determine: What code is still
+  needed?” Sometimes I’m working with a lean code base that powers a small 5-page installation.
+  Those projects are easy because spending a few seconds manually checking the resulting website is
+  enough to conclude whether some CSS definitions can be safely
+---
+
+Occasionally I need to spend time investigating an installation to determine: “What code is still
+needed?”
+
+Sometimes I’m working with a lean code base that powers a small 5-page installation. Those projects
+are easy because spending a few seconds manually checking the resulting website is enough to
+conclude whether some CSS definitions can be safely discarded after removing them.
+
+Other times I’m pouring over a behemoth website wielding 4500+ pages – any of which could be using
+some of the CSS definitions I’m hoping to prune.
+
+Today, we’ll talk about the other times.
+
+**The Goal:** Remove Unused Code
+
+## The Backstory
+
+This WordPress theme had 200+ PHP files, there was one massive CSS file weighing in at over 600KB
+(yikes!), and 30 JavaScript files. Even though the WordPress database housed thousands of posts
+across a dozen post types, I suspected much of this was code bloat.
+
+Note: I upgraded this WordPress installation for a more robust dev experience. The improved
+installation leans on Webpack. But that’s another post for another day.
+
+The Specs Every project is different, but for this particular undertaking I was working with:
+
+WordPress Custom theme (not a child theme) git version control Linux production + staging servers
+(CentOS) Windows local machine BlackWidow Shareware website scanner (wget is a viable Linux
+alternative) Step 1: Clone Production to Staging For the first step, I cloned the production website
+to staging (database and files). This ensured I was referencing the latest content and settings. I
+have a handy pull script that I use for such tasks.
+
+Step 2: Download Staging After production was pulled/synced to staging, I ran the BlackWidow website
+scanner to scrape and follow internal staging links.
+
+The purpose of this is to pull as much of the site’s resulting HTML as possible to a local folder.
+Then its text can be scanned using grep (Linux or Mac) or Select-String (Windows Powershell). For
+this project, I used Select-String on a Windows machine.
+
+Important: If you’re scraping a large site, do not scrape production directly! If the site is behind
+Cloudflare or other security firewall, you may trigger DDoS protection if you don’t throttle your
+scraping utility.
+
+Step 3: Get to the Git Repo Next, I SSH’d into staging and navigated to the custom theme folder.
+This folder is a git repo, so I had the benefit of being able to use git grep to search strings
+within the repo.
+
+Step 4: De-clutter! It’s time to get into it! For the bulk of this project, I combed through the CSS
+files to remove as many unused CSS rules as possible.
+
+I’d start by targeting groups of entries. We’ll use this one for example:
+
+```css
+div.info-box {
+  padding: 0 32px 22px 32px;
+  margin: 48px 0;
+  position: relative;
+  display: table;
+}
+
+div.info-box.left {
+  border-left: 4px solid #ff2900;
+  border-bottom: 4px solid #ff2900;
+}
+
+div.info-box .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #ff2900;
+  position: absolute;
+}
+```
+
+If class .info-box is not used in any HTML output, then it’s safe to say that .info-box .dot and
+.info-box.left etc. could also be purged from our CSS. Because, if there is no .info-box class in
+any HTML content, the cascading selectors downstream would never be referenced.
+
+I ran git grep on the repo to see if the string info-box appears anywhere in the entire site:
+
+```bash
+$ git grep -ln 'info-box'
+assets/public/css/main.min.css
+assets/public/css/main.min.css.map
+assets/src/scss/\_deprecated.scss
+```
+
+It only seems to appear in my stylesheets! This is good news. If it appeared in PHP template files
+or JavaScript, I’d have a bit more sleuthing to do to determine if those class rules were needed.
+But for simplicity’s sake, we won’t go down that rabbit hole now.
+
+Next, in order to be more certain that this CSS class doesn’t appear within the website, I ran a
+Select-String on the downloaded HTML (6600+ files!) to see if info-box appears anywhere:
+
+```shell
+> Select-String ./\*.html -Pattern 'info-box'
+>
+```
+
+Nope! All clear! If the string did appear somewhere in the HTML output, I’d have visibility into
+where. See here for example, using a different string “vertical”:
+
+```shell
+> Select-String ./\*.html -Pattern 'vertical'
+.1E592CD9.html:731:					<div class="connector vertical"><span class="end fancy"></span></div>
+.1E592CD9.html:753:					<div class="connector vertical"><span class="end fancy"></span></div>
+.1E592CD9.html:775:					<div class="connector vertical"><span class="end fancy"></span></div>
+.33A3095E.html:942:					<div class="connector vertical"><span class="end fancy"></span></div>
+```
+
+Important Note: CSS IDs or class selectors may not always appear in the scraped HTML output because
+those attributes can be added after page load by JavaScript. However, since I had previously ran a
+git grep on the repo (which contains all the theme’s JavaScript), I was more certain that none of my
+JavaScript was adding an “info-box” class dynamically. There are edge cases, of course, where
+perhaps the CSS was targeting a class that was added via plugin or other 3rd party script that isn’t
+included in the repo.
+
+Step 5: Rinse & Repeat Is this daunting? Yes. But, when the website is large, and the company’s
+business largely depends on stellar SEO and a well-working website, I’m happy to take the bit of
+extra time necessary to ensure that I’m not removing some important CSS.
