@@ -46,11 +46,13 @@ const tags = getAllTags();
         <div class="container">
           <br />
           <h2 class={styles.h2}>Tags &amp; Categories</h2>
-          {tags.map((tag) => (
-            <a href={`/blog/tag/${tag}`} class={styles.tagLink}>
-              {tag}
-            </a>
-          ))}
+          {
+            tags.map((tag) => (
+              <a href={`/blog/tag/${tag}`} class={styles.tagLink}>
+                {tag}
+              </a>
+            ))
+          }
         </div>
       </div>
     </div>

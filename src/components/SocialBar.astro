@@ -3,28 +3,30 @@ const socialLinks = [
   {
     name: 'GitHub',
     url: 'https://github.com/missionmike',
-    icon: 'github'
+    icon: 'github',
   },
   {
     name: 'LinkedIn',
     url: 'https://www.linkedin.com/in/michaeldinerstein/',
-    icon: 'linkedin'
+    icon: 'linkedin',
   },
   {
     name: 'Twitter',
     url: 'https://twitter.com/missionmike',
-    icon: 'twitter'
-  }
+    icon: 'twitter',
+  },
 ];
 ---
 
 <div class="social-bar">
-  {socialLinks.map((link) => (
-    <a href={link.url} target="_blank" rel="noopener noreferrer" class="social-link">
-      <i class={`fab fa-${link.icon}`}></i>
-      <span class="sr-only">{link.name}</span>
-    </a>
-  ))}
+  {
+    socialLinks.map((link) => (
+      <a href={link.url} target="_blank" rel="noopener noreferrer" class="social-link">
+        <i class={`fab fa-${link.icon}`} />
+        <span class="sr-only">{link.name}</span>
+      </a>
+    ))
+  }
 </div>
 
 <style>
@@ -55,4 +57,5 @@ const socialLinks = [
     white-space: nowrap;
     border: 0;
   }
-</style> 
+</style>
+

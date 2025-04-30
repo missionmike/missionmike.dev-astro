@@ -15,10 +15,7 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 ---
 
-<Layout
-  title={post.data.title}
-  description={post.data.excerpt}
->
+<Layout title={post.data.title} description={post.data.excerpt}>
   <article class="container py-5">
     <header class="mb-4">
       <h1>{post.data.title}</h1>
@@ -47,4 +44,5 @@ const { Content } = await post.render();
     color: #666;
     font-size: 0.9rem;
   }
-</style> 
+</style>
+
