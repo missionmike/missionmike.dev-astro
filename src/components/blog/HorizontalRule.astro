@@ -1,0 +1,18 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<hr class:list={['horizontal-rule', className]} />
+
+<style>
+  .horizontal-rule {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent), transparent);
+    margin: 2rem 0;
+  }
+</style>

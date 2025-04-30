@@ -7,8 +7,8 @@
     'Source Code Pro', ui-monospace, 'Cascadia Code', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
   // Colors
-  --color-text: #0066cc;
-  --color-text-light: #004c99;
+  --color-text: #333;
+  --color-text-light: #666;
   --color-background: #fff;
   --color-accent: #ff73cf;
 
@@ -58,6 +58,8 @@ h2 {
   font-size: 1.8rem;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
 }
 
 h3 {
@@ -131,7 +133,7 @@ a {
 @media (max-width: 576px) {
   h1 {
     font-size: 1.8rem;
-    letter-spacing: 0.3rem;
+    letter-spacing: 0.2rem;
   }
 
   h2 {
