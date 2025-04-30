@@ -33,6 +33,9 @@ jobs:
       - name: Run linting
         run: npm run lint
 
+      - name: Check types
+        run: npm run astro:check
+
       - name: Build
         env:
           PUBLIC_GTM_ID: ${{ vars.PUBLIC_GTM_ID }}
