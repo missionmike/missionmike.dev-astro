@@ -2,16 +2,17 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { components } from '../../components/mdx-components';
+import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
-  return posts.map((post) => ({
+  return posts.map((post: CollectionEntry<'posts'>) => ({
     params: { slug: post.slug },
     props: { post },
   }));
 }
 
-const { post } = Astro.props;
+const { post } = Astro.props as { post: CollectionEntry<'posts'> };
 const { Content } = await post.render();
 ---
 

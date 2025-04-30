@@ -1,14 +1,14 @@
 ---
-interface Post {
+type Post = {
   title: string;
   date: string;
   excerpt: string;
   path: string;
   tags?: string[];
   featuredImage?: string;
-}
+};
 
-const { post } = Astro.props;
+const { post } = Astro.props as { post: Post };
 const truncatedExcerpt =
   post.excerpt.length > 150 ? post.excerpt.slice(0, 150) + '...' : post.excerpt;
 ---
@@ -44,7 +44,7 @@ const truncatedExcerpt =
         post.tags && post.tags.length > 0 && (
           <div class="mt-2">
             {post.tags.map((tag: string) => (
-              <a href={`/blog/tag/${tag}`} class="tag-link" onclick="event.stopPropagation()">
+              <a href={`/blog/tag/${tag}`} class="tag-link" data-no-bubble>
                 {tag}
               </a>
             ))}
@@ -115,5 +115,8 @@ const truncatedExcerpt =
     background-color: #343a40;
     color: #fff;
     transform: translateY(-1px);
+  }
+  [data-no-bubble] {
+    pointer-events: none;
   }
 </style>

@@ -35,7 +35,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
       rel="stylesheet"
     />
     <!-- Google Tag Manager -->
-    <script define:vars={{ gtmId }}>
+    <script is:inline define:vars={{ gtmId }}>
       (function (w, d, s, l, i) {
         w[l] = w[l] || [];
         w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
