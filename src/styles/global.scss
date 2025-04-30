@@ -7,8 +7,8 @@
     'Source Code Pro', ui-monospace, 'Cascadia Code', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
   // Colors
-  --color-text: #333;
-  --color-text-light: #666;
+  --color-text: #0066cc;
+  --color-text-light: #004c99;
   --color-background: #fff;
   --color-accent: #ff73cf;
 
@@ -50,13 +50,13 @@ h6 {
 
 h1 {
   font-size: 2.5rem;
-  letter-spacing: 0.7rem;
+  letter-spacing: 0.2rem;
   text-transform: uppercase;
 }
 
 h2 {
   font-size: 1.8rem;
-  letter-spacing: 0.3rem;
+  letter-spacing: 0.1rem;
   text-transform: uppercase;
 }
 
@@ -84,9 +84,25 @@ pre,
   font-size: 0.9em;
 }
 
+// Markdown code blocks
+pre {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border: 1px solid #dee2e6;
+  overflow-x: auto;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
 a {
   color: var(--color-text);
-  text-decoration: none;
+  text-decoration: underline;
   transition: color 0.2s ease;
 
   &:hover {
@@ -98,12 +114,12 @@ a {
 @media (max-width: 768px) {
   h1 {
     font-size: 2rem;
-    letter-spacing: 0.5rem;
+    letter-spacing: 0.2rem;
   }
 
   h2 {
     font-size: 1.5rem;
-    letter-spacing: 0.2rem;
+    letter-spacing: 0.1rem;
   }
 
   h3 {

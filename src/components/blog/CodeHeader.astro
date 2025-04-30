@@ -1,0 +1,26 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['code-header', className]}>
+  <slot />
+</div>
+
+<style>
+  .code-header {
+    background-color: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid #dee2e6;
+    border-bottom: none;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: #495057;
+  }
+</style>
+

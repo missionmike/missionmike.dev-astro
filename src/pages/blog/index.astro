@@ -19,7 +19,7 @@ const sortedPosts = posts.sort(
     <h1 class="mb-4">Blog Posts</h1>
     <div class="row">
       {
-        sortedPosts.map((post: CollectionEntry<'posts'>) => (
+        sortedPosts.map((post) => (
           <div class="col-md-6 mb-4">
             <BlogPreview
               post={{
@@ -28,6 +28,7 @@ const sortedPosts = posts.sort(
                 excerpt: post.data.excerpt || post.data.summary || '',
                 path: `blog/${post.slug}`,
                 tags: post.data.tags || [],
+                featuredImage: post.data.featuredImage,
               }}
             />
           </div>
@@ -44,4 +45,3 @@ const sortedPosts = posts.sort(
     color: #333;
   }
 </style>
-

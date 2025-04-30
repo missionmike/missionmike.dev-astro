@@ -17,6 +17,17 @@ const { Content } = await post.render();
 
 <Layout title={post.data.title} description={post.data.excerpt}>
   <article class="container py-5">
+    {
+      post.data.featuredImage && (
+        <div class="featured-image-container mb-4">
+          <img
+            src={`/static/images/${post.data.featuredImage as string}`}
+            alt={post.data.title}
+            class="w-100"
+          />
+        </div>
+      )
+    }
     <header class="mb-4">
       <h1>{post.data.title}</h1>
       <time datetime={post.data.date}>
@@ -33,6 +44,19 @@ const { Content } = await post.render();
     margin: 0 auto;
   }
 
+  .featured-image-container {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .featured-image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
@@ -45,4 +69,3 @@ const { Content } = await post.render();
     font-size: 0.9rem;
   }
 </style>
-

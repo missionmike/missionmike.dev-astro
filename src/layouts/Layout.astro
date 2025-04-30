@@ -74,6 +74,10 @@ const { title, description } = Astro.props;
 
   main {
     min-height: calc(100vh - 200px);
+
+    @media (max-width: 1200px) {
+      padding: 0 1rem;
+    }
   }
 
   .footer {

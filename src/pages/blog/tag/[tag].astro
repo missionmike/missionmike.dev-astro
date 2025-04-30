@@ -37,9 +37,10 @@ const sortedPosts = posts.sort(
               post={{
                 title: post.data.title,
                 date: post.data.date,
-                excerpt: post.data.excerpt,
+                excerpt: post.data.excerpt || post.data.summary || '',
                 path: `blog/${post.slug}`,
                 tags: post.data.tags || [],
+                featuredImage: post.data.featuredImage,
               }}
             />
           </div>
@@ -56,4 +57,3 @@ const sortedPosts = posts.sort(
     color: #333;
   }
 </style>
-

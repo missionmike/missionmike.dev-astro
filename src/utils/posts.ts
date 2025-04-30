@@ -8,6 +8,7 @@ export interface Post {
   excerpt: string;
   path: string;
   tags?: string[];
+  featuredImage?: string;
 }
 
 function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
@@ -42,6 +43,7 @@ export function getAllPosts(): Post[] {
       date: data.date || new Date().toISOString(),
       excerpt: content.split('\n')[0],
       tags: data.tags || [],
+      featuredImage: data.featuredImage || undefined,
     } as Post;
   });
 
