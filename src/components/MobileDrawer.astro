@@ -36,6 +36,11 @@
     z-index: 100;
     position: fixed;
     top: 1rem;
+    left: 1rem;
+    width: 48px;
+    height: 42px;
+    background-color: var(--color-background);
+    opacity: 0.8;
   }
 
   .hamburger {
@@ -43,10 +48,10 @@
     width: 24px;
     height: 2px;
     top: 20px;
-    left: 15px;
+    left: 12px;
     background: var(--color-text);
     position: absolute;
-    transition: background 0.2s ease;
+    transition: all 0.3s ease-in-out;
   }
 
   .hamburger::before,
@@ -57,27 +62,31 @@
     width: 24px;
     height: 2px;
     background: var(--color-text);
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease-in-out;
   }
 
   .hamburger::before {
     top: -8px;
+    transform-origin: center;
   }
 
   .hamburger::after {
     bottom: -8px;
+    transform-origin: center;
   }
 
-  .drawer-open .hamburger {
-    background: transparent;
+  :global(body.drawer-open) .hamburger {
+    background: transparent !important;
   }
 
-  .drawer-open .hamburger::before {
-    transform: translateY(8px) rotate(45deg);
+  :global(body.drawer-open) .hamburger::before {
+    top: 0;
+    transform: rotate(45deg);
   }
 
-  .drawer-open .hamburger::after {
-    transform: translateY(-8px) rotate(-45deg);
+  :global(body.drawer-open) .hamburger::after {
+    bottom: 0;
+    transform: rotate(-45deg);
   }
 
   .mobile-drawer {

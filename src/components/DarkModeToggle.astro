@@ -44,7 +44,7 @@
 </button>
 
 <script>
-  import { getCookie, setCookie, getThemePreference } from '../utils/cookies';
+  import { setCookie, getThemePreference } from '../utils/cookies';
 
   const htmlElement = document.documentElement;
 
@@ -215,6 +215,10 @@
   /* Move knob to right for light mode */
   :global([data-theme='light']) .theme-toggle::after {
     transform: translateX(34px);
+
+    @media (max-width: 768px) {
+      transform: translateX(30px);
+    }
   }
 
   /* Active state animation */
