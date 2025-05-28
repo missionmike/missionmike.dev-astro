@@ -1,0 +1,99 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer mt-auto py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="mb-0">&copy; {currentYear} Michael Dinerstein. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <div class="social-links">
+          <a
+            href="https://github.com/missionmike"
+            class="btn btn-sm btn-outline-dark me-2"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="GitHub"
+          >
+            <i class="fab fa-github"></i>
+          </a>
+          <a
+            href="https://linkedin.com/in/michaeldinerstein"
+            class="btn btn-sm btn-outline-dark linkedin-btn me-2"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="LinkedIn"
+          >
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a
+            href="https://discord.gg/rgykyZmW"
+            class="btn btn-sm btn-outline-dark discord-btn me-2"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Discord"
+          >
+            <i class="fab fa-discord"></i>
+          </a>
+          <a
+            href="mailto:md@missionmike.dev"
+            class="btn btn-sm btn-outline-secondary"
+            title="Email"
+          >
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-header-bg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .social-links {
+    @media (max-width: 768px) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      width: 100%;
+    }
+  }
+
+  .social-links .btn {
+    padding: 0.25rem 0.5rem;
+    transition: all 0.2s ease-in-out;
+
+    @media (max-width: 768px) {
+      width: 50px;
+    }
+  }
+
+  .social-links .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .discord-btn {
+    color: #5865f2;
+    border-color: #5865f2;
+  }
+
+  .linkedin-btn {
+    color: #0077b5;
+    border-color: #0077b5;
+  }
+
+  .discord-btn:hover,
+  .linkedin-btn:hover {
+    color: white;
+    border-color: white;
+  }
+</style>

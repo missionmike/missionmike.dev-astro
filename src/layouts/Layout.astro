@@ -1,7 +1,9 @@
 ---
 import '../styles/global.scss';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import AosInit from '../components/AosInit.astro';
+import { getThemePreference } from '../utils/cookies';
 
 interface Props {
   title: string;
@@ -10,10 +12,11 @@ interface Props {
 
 const { title, description } = Astro.props;
 const gtmId = import.meta.env.PUBLIC_GTM_ID;
+const initialTheme = getThemePreference();
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme={initialTheme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -60,17 +63,11 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
         style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <Header />
     <main>
+      <Header />
       <slot />
     </main>
-    <footer class="footer">
-      <div class="container">
-        <p>
-          &copy; {new Date().getFullYear()} Michael R. Dinerstein (Mission Mike). All rights reserved.
-        </p>
-      </div>
-    </footer>
+    <Footer />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     ></script>
     <AosInit />

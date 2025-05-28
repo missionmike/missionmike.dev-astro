@@ -44,13 +44,15 @@
 </button>
 
 <script>
+  import { getCookie, setCookie, getThemePreference } from '../utils/cookies';
+
   const htmlElement = document.documentElement;
 
   // Function to set theme
   function setTheme(theme: 'dark' | 'light'): void {
     htmlElement.setAttribute('data-theme', theme);
     document.body.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    setCookie('theme', theme);
   }
 
   // Function to toggle theme
@@ -60,13 +62,11 @@
     setTheme(newTheme as 'dark' | 'light');
   }
 
-  // Initialize theme based on system preference or saved theme
-  const savedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+  // Initialize theme based on cookie or system preference
+  const initialTheme = getThemePreference();
 
   // Set initial theme
-  setTheme(initialTheme as 'dark' | 'light');
+  setTheme(initialTheme);
 
   // Add click event listeners to all theme toggles
   function initializeThemeToggles() {

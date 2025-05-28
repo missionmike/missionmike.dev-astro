@@ -1,12 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+
+const title = 'About | Mission Mike';
+const description =
+  'Technically-inclined creative with a love for innovation and expression. ' +
+  'When not crafting software, you can find Michael producing YouTube content with his family. ' +
+  'Perpetual project juggler, serial domain registrar, compulsive refactorer.';
 ---
 
-<Layout
-  title="About | Mission Mike"
-  description="Learn more about Michael Dinerstein, a software developer and graphic artist residing in the Pacific Northwest."
->
+<Layout title={title} description={description}>
   <div class="container py-5">
     <div class="row justify-content-center">
       <div class="col-lg-8">
@@ -15,7 +18,7 @@ import { Image } from 'astro:assets';
         <div class="about-content">
           <div class="profile-image">
             <Image
-              src="/static/images/missionmike-profile.jpeg"
+              src="/static/images/missionmike-profile.jpg"
               alt="Michael Dinerstein's profile photo"
               width={200}
               height={200}
@@ -23,6 +26,15 @@ import { Image } from 'astro:assets';
             />
           </div>
 
+          <p>
+            <strong>Mission Mike</strong> is a technically-inclined creative with a love for innovation
+            and expression.
+          </p>
+          <p>
+            When he&apos;s not crafting software, you can find him producing YouTube content with
+            his family. He's a perpetual project juggler, serial domain registrar, and compulsive
+            refactorer.
+          </p>
           <p>
             Growing up, Michael Dinerstein was one of those kids who would take things apart and put
             them back together just to see how they "ticked."
@@ -83,7 +95,7 @@ import { Image } from 'astro:assets';
             I'm always interested in connecting with fellow developers and discussing new projects.
             Feel free to reach out through my social media channels or email.
           </p>
-          <div class="d-flex gap-3 mt-3">
+          <div class="d-flex gap-3 mt-3 social-links">
             <a
               href="https://github.com/missionmike"
               class="btn btn-outline-dark"
@@ -94,11 +106,19 @@ import { Image } from 'astro:assets';
             </a>
             <a
               href="https://linkedin.com/in/michaeldinerstein"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-dark linkedin-btn"
               target="_blank"
               rel="noopener noreferrer"
             >
               <i class="fab fa-linkedin me-2"></i>LinkedIn
+            </a>
+            <a
+              href="https://discord.gg/rgykyZmW"
+              class="btn btn-outline-dark discord-btn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fab fa-discord me-2"></i>Discord
             </a>
             <a href="mailto:md@missionmike.dev" class="btn btn-outline-secondary">
               <i class="fas fa-envelope me-2"></i>Email
@@ -107,69 +127,101 @@ import { Image } from 'astro:assets';
         </div>
       </div>
     </div>
-
-    <style>
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--color-text);
-      }
-
-      .about-content {
-        position: relative;
-      }
-
-      .profile-image {
-        width: 200px;
-        height: 200px;
-        overflow: hidden;
-        border-radius: 50%;
-        box-shadow: 0 4px 6px var(--color-shadow);
-        float: right;
-        margin: 0 0 1rem 2rem;
-        shape-outside: circle(50%);
-      }
-
-      .profile-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .card {
-        border: none;
-        box-shadow: 0 2px 4px var(--color-shadow);
-        transition: transform 0.2s ease-in-out;
-        background-color: var(--color-header-bg);
-      }
-
-      .card:hover {
-        transform: translateY(-5px);
-      }
-
-      .btn {
-        transition: all 0.2s ease-in-out;
-      }
-
-      .btn:hover {
-        transform: translateY(-2px);
-      }
-
-      .list-unstyled li {
-        margin-bottom: 0.5rem;
-      }
-
-      .list-unstyled i {
-        width: 1.5rem;
-        text-align: center;
-      }
-
-      @media (max-width: 768px) {
-        .profile-image {
-          margin: 0 auto 2rem;
-          display: block;
-        }
-      }
-    </style>
   </div>
 </Layout>
+
+<style>
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .about-content {
+    position: relative;
+  }
+
+  .profile-image {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px var(--color-shadow);
+    float: right;
+    margin: 0 0 1rem 2rem;
+    shape-outside: circle(50%);
+  }
+
+  .profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card {
+    border: none;
+    box-shadow: 0 2px 4px var(--color-shadow);
+    transition: transform 0.2s ease-in-out;
+    background-color: var(--color-header-bg);
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .btn {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .list-unstyled li {
+    margin-bottom: 0.5rem;
+  }
+
+  .list-unstyled i {
+    width: 1.5rem;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .profile-image {
+      margin: 0 auto 2rem;
+      display: block;
+    }
+  }
+
+  .social-links {
+    @media (max-width: 768px) {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      width: 100%;
+
+      .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+    }
+  }
+
+  .discord-btn {
+    color: #5865f2;
+    border-color: #5865f2;
+  }
+
+  .linkedin-btn {
+    color: #0077b5;
+    border-color: #0077b5;
+  }
+
+  .discord-btn:hover,
+  .linkedin-btn:hover {
+    color: white;
+    border-color: white;
+  }
+</style>
