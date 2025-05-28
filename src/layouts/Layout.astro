@@ -1,6 +1,7 @@
 ---
 import '../styles/global.scss';
 import Header from '../components/Header.astro';
+import AosInit from '../components/AosInit.astro';
 
 interface Props {
   title: string;
@@ -72,6 +73,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     ></script>
+    <AosInit />
   </body>
 </html>
 

@@ -16,7 +16,7 @@ const tags = getAllTags();
 >
   <div class="d-flex justify-content-center">
     <div class={styles.index} style="max-width: 1200px;">
-      <div class="row">
+      <div class="row" data-aos="fade-in">
         <div class="col">
           <h1 class={styles.h1}>
             missionmike<span class={styles.suffix}>.dev</span>
@@ -28,7 +28,7 @@ const tags = getAllTags();
         </div>
       </div>
       <div class="row">
-        <div class="col">
+        <div class="col" data-aos="fade-right">
           <SocialBar />
           <div class={styles.imageFrame}>
             <div class="image-wrapper">
@@ -47,13 +47,18 @@ const tags = getAllTags();
           <span class={styles.h2}>Latest post:</span>
           <BlogPreview post={latestPost} />
         </div>
-        <div class="row mt-5">
+        <div class="row mt-5" data-aos="fade-in">
           <div>
             <br />
             <h2 class={styles.h2}>Tags &amp; Categories</h2>
             {
-              tags.map((tag) => (
-                <a href={`/blog/tag/${tag.toLowerCase()}`} class={styles.tagLink}>
+              tags.map((tag, index) => (
+                <a
+                  href={`/blog/tag/${tag.toLowerCase()}`}
+                  class={styles.tagLink}
+                  data-aos={index % 2 === 0 ? 'fade-left' : 'fade-up'}
+                  data-aos-delay={300 + index * 50}
+                >
                   {tag}
                 </a>
               ))

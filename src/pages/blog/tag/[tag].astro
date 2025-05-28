@@ -35,7 +35,7 @@ const sortedPosts = posts.sort(
     <h1 class="mb-4">Posts tagged with "{tag}"</h1>
     <div class="row">
       {
-        sortedPosts.map((post) => (
+        sortedPosts.map((post, index) => (
           <div class="col-md-6 mb-4">
             <BlogPreview
               post={{
@@ -46,6 +46,7 @@ const sortedPosts = posts.sort(
                 tags: post.data.tags || [],
                 featuredImage: post.data.featuredImage,
               }}
+              columnIndex={index % 2}
             />
           </div>
         ))

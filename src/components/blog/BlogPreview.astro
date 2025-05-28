@@ -9,13 +9,17 @@ type Post = {
   featuredImage?: string;
 };
 
-const { post } = Astro.props as { post: Post };
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
 const truncatedExcerpt =
   post.excerpt.length > 150 ? post.excerpt.slice(0, 150) + '...' : post.excerpt;
 ---
 
 <a href={post.path} class="text-decoration-none">
-  <div class="card h-100">
+  <div class="card h-100" data-aos="fade-up">
     {
       post.featuredImage && (
         <div class="card-img-top aspect-ratio-16-9">
@@ -83,6 +87,10 @@ const truncatedExcerpt =
   }
   .card {
     transition: transform 0.2s ease-in-out;
+    opacity: 0;
+  }
+  [data-aos='fade-up'].aos-animate {
+    opacity: 1;
   }
   a:hover .card {
     transform: translateY(-5px);
