@@ -1,4 +1,4 @@
-<button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+<button class="theme-toggle" aria-label="Toggle dark mode">
   <div class="toggle-slider">
     <div class="icon-wrapper sun">
       <svg
@@ -44,7 +44,6 @@
 </button>
 
 <script>
-  const themeToggle = document.getElementById('theme-toggle');
   const htmlElement = document.documentElement;
 
   // Function to set theme
@@ -66,15 +65,20 @@
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
 
-  // Ensure the theme is set both during initialization and after DOM content is loaded
+  // Set initial theme
   setTheme(initialTheme as 'dark' | 'light');
 
-  document.addEventListener('DOMContentLoaded', () => {
-    setTheme(initialTheme as 'dark' | 'light');
-  });
+  // Add click event listeners to all theme toggles
+  function initializeThemeToggles() {
+    const themeToggles = document.querySelectorAll('.theme-toggle');
+    themeToggles.forEach((toggle) => {
+      toggle.addEventListener('click', toggleTheme);
+    });
+  }
 
-  // Add click event listener
-  themeToggle?.addEventListener('click', toggleTheme);
+  // Initialize on load and after any dynamic content changes
+  document.addEventListener('DOMContentLoaded', initializeThemeToggles);
+  initializeThemeToggles();
 
   // Add transition class after initial load to prevent transition on page load
   setTimeout(() => {
@@ -109,24 +113,35 @@
 
   @media (max-width: 768px) {
     .theme-toggle {
-      width: 80px;
-      height: 44px;
-      padding: 0.35rem;
+      width: 64px;
+      height: 34px;
+      padding: 0.25rem;
     }
 
     .theme-toggle::after {
-      width: 34px;
-      height: 34px;
+      width: 26px;
+      height: 26px;
+      top: 2px;
+      left: 2px;
     }
 
     :global([data-theme='light']) .theme-toggle::after {
-      transform: translateX(38px);
+      transform: translateX(32px);
+    }
+
+    :global([data-theme='light']) .theme-toggle:active::after {
+      transform: translateX(32px) scale(0.9);
+    }
+
+    .icon-wrapper {
+      width: 28px;
+      height: 28px;
     }
 
     .sun-icon,
     .moon-icon {
-      width: 24px;
-      height: 24px;
+      width: 18px;
+      height: 18px;
     }
   }
 
@@ -190,6 +205,11 @@
     border-radius: 50%;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 2;
+
+    @media (max-width: 768px) {
+      width: 26px;
+      height: 26px;
+    }
   }
 
   /* Move knob to right for light mode */
