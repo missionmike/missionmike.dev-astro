@@ -2,6 +2,7 @@
 type Post = {
   title: string;
   date: string;
+  updated?: string;
   excerpt: string;
   path: string;
   tags?: string[];
@@ -30,14 +31,33 @@ const truncatedExcerpt =
       <h2 class="card-title h5">
         {post.title}
       </h2>
-      <p class="card-text text-muted small">
-        {
-          new Date(post.date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })
-        }
+      <p class="card-text text-muted small d-flex justify-content-between">
+        <span>
+          Published
+          {
+            new Date(post.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          }
+        </span>
+        <span
+          ><em>
+            {
+              post.updated && (
+                <>
+                  Updated{' '}
+                  {new Date(post.updated).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </>
+              )
+            }
+          </em>
+        </span>
       </p>
       <p class="card-text">{truncatedExcerpt}</p>
       {
