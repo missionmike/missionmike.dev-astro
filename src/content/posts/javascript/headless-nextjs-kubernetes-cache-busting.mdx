@@ -1,6 +1,7 @@
 ---
 title: 'Headless WordPress & Next.js on Kubernetes: Page Revalidation and CDN Invalidation'
 date: '2023-03-26'
+updated: '2025-05-28'
 tags: ['Next.js', 'React', 'WordPress', 'Kubernetes', 'PHP']
 draft: false
 featuredImage: blog/robot-person-at-a-desk-weird.jpeg
@@ -9,11 +10,6 @@ summary: >
   on! The technique can be applied to any back-end using Next.js for the front-end, hosted in a
   Kubernetes cluster.
 ---
-
-<Aside>
-  Update 2023/04/12: This article in its current state only addresses 75% of the problem. An update
-  is forthcoming to include the process to clear the CDN of the relevant NextJS .json data files.
-</Aside>
 
 ## The Problem
 
@@ -197,7 +193,7 @@ function get_front_end_pod_ip_addresses() {
 
 This helper function is used to retrieve our list of local Kubernetes front-end pod IP addresses, to
 which we'll _then_ send
-[Next.js on-demand revalidation requests.](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration#on-demand-revalidation)
+[Next.js on-demand revalidation requests.](https://nextjs.org/docs/app/api-reference/functions/revalidatePath)
 
 Since this on-demand revalidation process is well-documented in the previous link, I will not go
 into details on setting that up here.
@@ -365,12 +361,27 @@ function invalidate_url_in_cdn( $relative_url = '' ) {
 }
 ```
 
+## Invalidation of Next.js .json files in CDN
+
+While revalidating a Next.js page, the Next.js API route will also generate a new `.json` file for
+the page data (if using SSR). The CDN will also need to clear these `.json` files from the CDN
+cache!
+
+To do this, ensure that your CDN path invalidation is set up to clear the `.json` data files as well
+as the page route. For example, if you're clearing the CDN for
+`https://yourdomain.com/path/to/your/page-slug`, you'll need to clear the following paths:
+
+```json
+/path/to/your/page-slug*
+/_next/data/your-nextjs-app/path/to/your/page-slug.json*
+```
+
 ## Conclusion
 
 That's the gist of it! Now when you update a post, page, etc. in WordPress, the front-end pods
-should revalidate the page, followed by a CDN cache clear on successful revalidation.
+should receive a request revalidate the page, followed by a CDN cache clear on successful
+revalidation.
 
-If you have any questions, or run into any issues, please feel free to ping me on Twitter:
-[@missionmikedev](https://twitter.com/missionmikedev) or find me on
-[LinkedIn.](https://www.linkedin.com/in/michaeldinerstein/) I can't promise an answer, but I can
-promise a response :)
+If you have any questions, or run into any issues, please feel free to ping me on X:
+[@missionmikedev](https://x.com/missionmikedev) or find me on
+[LinkedIn.](https://www.linkedin.com/in/michaeldinerstein/)

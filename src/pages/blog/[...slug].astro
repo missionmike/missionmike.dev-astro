@@ -32,8 +32,18 @@ const { Content } = await post.render();
     <header class="mb-4">
       <h1>{post.data.title}</h1>
       <time datetime={post.data.date}>
-        {new Date(post.data.date).toLocaleDateString()}
+        Published {new Date(post.data.date).toLocaleDateString()}
       </time>
+      {
+        post.data.updated && (
+          <>
+            {' '}
+            <time datetime={post.data.updated}>
+              | <em>Last updated {new Date(post.data.updated).toLocaleDateString()}</em>
+            </time>
+          </>
+        )
+      }
     </header>
     <Content components={components} />
   </article>
