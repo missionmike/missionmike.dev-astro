@@ -1,0 +1,145 @@
+<script>
+  const drawerToggle = document.getElementById('drawer-toggle');
+  const drawer = document.getElementById('mobile-drawer');
+  const drawerOverlay = document.getElementById('drawer-overlay');
+
+  function toggleDrawer() {
+    drawer?.classList.toggle('open');
+    drawerOverlay?.classList.toggle('visible');
+    document.body.classList.toggle('drawer-open');
+  }
+
+  drawerToggle?.addEventListener('click', toggleDrawer);
+  drawerOverlay?.addEventListener('click', toggleDrawer);
+</script>
+
+<div id="drawer-overlay" class="drawer-overlay"></div>
+<button id="drawer-toggle" class="drawer-toggle" aria-label="Toggle menu">
+  <span class="hamburger"></span>
+</button>
+
+<div id="mobile-drawer" class="mobile-drawer">
+  <nav class="drawer-nav">
+    <slot name="navigation" />
+  </nav>
+  <div class="drawer-footer">
+    <slot name="footer" />
+  </div>
+</div>
+
+<style>
+  .drawer-toggle {
+    display: none;
+    background: none;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    position: relative;
+    z-index: 100;
+  }
+
+  .hamburger {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--color-text);
+    position: fixed;
+    transition: background 0.2s ease;
+  }
+
+  .hamburger::before,
+  .hamburger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background: var(--color-text);
+    transition: transform 0.2s ease;
+  }
+
+  .hamburger::before {
+    top: -8px;
+  }
+
+  .hamburger::after {
+    bottom: -8px;
+  }
+
+  .drawer-open .hamburger {
+    background: transparent;
+  }
+
+  .drawer-open .hamburger::before {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .drawer-open .hamburger::after {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--color-background);
+    box-shadow: -2px 0 5px var(--color-shadow);
+    transform: translateX(100vw);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+
+    &.open {
+      transform: translateX(0);
+    }
+  }
+
+  .drawer-nav {
+    width: 100vw;
+    flex: 1;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .drawer-footer {
+    padding: 2rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 98;
+  }
+
+  .drawer-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (max-width: 768px) {
+    .drawer-toggle {
+      display: block;
+    }
+
+    :global(body.drawer-open) {
+      overflow: hidden;
+    }
+  }
+</style>
