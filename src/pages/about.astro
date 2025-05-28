@@ -112,7 +112,7 @@ import { Image } from 'astro:assets';
       h1 {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #333;
+        color: var(--color-text);
       }
 
       .about-content {
@@ -124,7 +124,7 @@ import { Image } from 'astro:assets';
         height: 200px;
         overflow: hidden;
         border-radius: 50%;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px var(--color-shadow);
         float: right;
         margin: 0 0 1rem 2rem;
         shape-outside: circle(50%);
@@ -138,8 +138,9 @@ import { Image } from 'astro:assets';
 
       .card {
         border: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px var(--color-shadow);
         transition: transform 0.2s ease-in-out;
+        background-color: var(--color-header-bg);
       }
 
       .card:hover {

@@ -6,7 +6,7 @@
 
 .h1 {
   letter-spacing: 0.2rem;
-  color: #333;
+  color: var(--color-text);
 }
 
 @media (max-width: 576px) {
@@ -25,7 +25,7 @@
 }
 
 .suffix {
-  color: #999;
+  color: var(--color-text-light);
 }
 
 .subtitle {
@@ -38,7 +38,7 @@
   display: block;
   font-size: 1.2rem;
   font-weight: normal;
-  color: gray;
+  color: var(--color-text-light);
   text-transform: uppercase;
   letter-spacing: 0.1rem;
   margin-top: 0.5rem;
@@ -48,21 +48,21 @@
 .imageFrame p {
   padding: 1rem;
   margin-top: 0;
-  background-color: #efefef;
+  background-color: var(--color-code-bg);
 }
 
 .tagLink {
   display: inline-block;
   padding: 0.25rem 1rem;
-  color: white;
+  color: var(--color-background);
   margin: 0.5rem;
-  background-color: #ff73cf;
+  background-color: var(--color-accent);
   cursor: pointer;
-  border: 1px solid white;
+  border: 1px solid var(--color-border);
 }
 
 .tagLink:hover {
-  border: 1px solid black;
+  border: 1px solid var(--color-text);
 }
 
 .quoteContainer {

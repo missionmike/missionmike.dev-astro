@@ -1,4 +1,6 @@
 ---
+import DarkModeToggle from './DarkModeToggle.astro';
+
 const links = [
   {
     href: '/',
@@ -17,31 +19,40 @@ const links = [
 
 <header class="header">
   <nav class="header-nav">
-    <ul class="header-nav-list">
-      {
-        links.map((link) => (
-          <li>
-            <a href={link.href}>{link.text}</a>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="nav-content">
+      <ul class="header-nav-list">
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href}>{link.text}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="theme-toggle-wrapper">
+        <DarkModeToggle />
+      </div>
+    </div>
   </nav>
 </header>
 
 <style>
   .header {
     padding: 1rem 0;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-header-bg);
+    box-shadow: 0 2px 4px var(--color-shadow);
   }
 
   .header-nav {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 1rem;
+  }
+
+  .nav-content {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .header-nav-list {
@@ -62,7 +73,35 @@ const links = [
 
     &:hover {
       color: var(--color-text-light);
-      background-color: #f5f5f5;
+      background-color: var(--color-code-bg);
+    }
+  }
+
+  .theme-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding-left: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .nav-content {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .header-nav-list {
+      order: 2;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .theme-toggle-wrapper {
+      order: 1;
+      margin-left: auto;
+      padding-left: 1rem;
     }
   }
 </style>

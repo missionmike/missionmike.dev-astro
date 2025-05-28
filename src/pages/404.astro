@@ -78,19 +78,22 @@ import Layout from '../layouts/Layout.astro';
   .btn-primary {
     background: var(--color-accent);
     border-color: var(--color-accent);
+    color: var(--color-background);
   }
 
   .btn-primary:hover {
     background: var(--color-accent);
     border-color: var(--color-accent);
     opacity: 0.9;
+    color: var(--color-background);
   }
 
   .card {
-    border: 1px solid white;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-header-bg);
   }
 
   .card:hover {
-    border: 1px solid black;
+    border: 1px solid var(--color-text);
   }
 </style>

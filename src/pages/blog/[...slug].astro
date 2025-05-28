@@ -61,7 +61,7 @@ const { Content } = await post.render();
     width: 100%;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--color-shadow);
   }
 
   .featured-image-container img {
@@ -73,12 +73,12 @@ const { Content } = await post.render();
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--color-text);
     margin-bottom: 1rem;
   }
 
   time {
-    color: #666;
+    color: var(--color-text-light);
     font-size: 0.9rem;
   }
 </style>

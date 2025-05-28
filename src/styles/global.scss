@@ -6,11 +6,17 @@
   --font-mono:
     'Source Code Pro', ui-monospace, 'Cascadia Code', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
-  // Colors
-  --color-text: #333;
-  --color-text-light: #666;
-  --color-background: #fff;
-  --color-accent: #ff73cf;
+  // Colors - Light Theme
+  --color-text: #1a1a1a;
+  --color-text-light: #666666;
+  --color-background: #ffffff;
+  --color-accent: #7c3aff;
+  --color-border: #e5e5e5;
+  --color-code-bg: #f5f5f5;
+  --color-header-bg: rgba(255, 255, 255, 0.8);
+  --color-footer-bg: #f8f9fa;
+  --color-code-text: #1a1a1a;
+  --color-shadow: rgba(0, 0, 0, 0.1);
 
   // Spacing
   --spacing-xs: 0.25rem;
@@ -18,6 +24,20 @@
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
   --spacing-xl: 4rem;
+}
+
+// Dark mode colors
+[data-theme='dark'] {
+  --color-text: #ffffff;
+  --color-text-light: #cccccc;
+  --color-background: #1a1a1a;
+  --color-accent: #9d6aff;
+  --color-border: #333333;
+  --color-code-bg: #2a2a2a;
+  --color-header-bg: rgba(26, 26, 26, 0.8);
+  --color-footer-bg: #2a2a2a;
+  --color-code-text: #ffffff;
+  --color-shadow: rgba(0, 0, 0, 0.3);
 }
 
 // Base styles
@@ -32,6 +52,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 // Typography
@@ -77,6 +99,7 @@ p {
   margin: 0 0 var(--spacing-md);
   font-size: 1rem;
   line-height: 1.6;
+  color: var(--color-text);
 }
 
 // Code and technical text
@@ -89,9 +112,9 @@ pre,
 
 // Markdown code blocks
 pre {
-  background-color: #f8f9fa;
+  background-color: var(--color-code-bg);
   padding: 1.5rem;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--color-border);
   overflow-x: auto;
 }
 
@@ -100,9 +123,10 @@ pre code {
   background: none;
   border: none;
   font-size: 0.9rem;
-  color: #495057;
+  color: var(--color-code-text);
 }
 
+/* Remove the global transition and only apply to specific interactive elements */
 a {
   color: var(--color-text);
   text-decoration: underline;
@@ -111,6 +135,18 @@ a {
   &:hover {
     color: var(--color-text-light);
   }
+}
+
+/* Interactive elements that need transitions */
+.header-nav-list a,
+.social-link,
+.btn,
+button {
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 // External links
@@ -167,4 +203,17 @@ ul li {
     font-size: 1.3rem;
     letter-spacing: 0.15rem;
   }
+}
+
+/* Ensure text in cards and other containers inherits the correct color */
+.card,
+.container,
+article,
+section {
+  color: var(--color-text);
+}
+
+/* Remove the global transition */
+* {
+  /* Remove transition properties */
 }

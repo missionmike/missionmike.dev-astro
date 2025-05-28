@@ -1,0 +1,159 @@
+<button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+  <div class="toggle-slider">
+    <svg
+      class="sun-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <svg
+      class="moon-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </div>
+</button>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const htmlElement = document.documentElement;
+
+  // Function to set theme
+  function setTheme(theme: 'dark' | 'light'): void {
+    console.log('Setting theme to:', theme);
+    htmlElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    console.log('Current data-theme attribute:', htmlElement.getAttribute('data-theme'));
+  }
+
+  // Function to toggle theme
+  function toggleTheme(): void {
+    const currentTheme = htmlElement.getAttribute('data-theme') || 'dark';
+    console.log('Current theme before toggle:', currentTheme);
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme as 'dark' | 'light');
+  }
+
+  // Initialize theme based on system preference or saved theme
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+  console.log(
+    'Initial theme:',
+    initialTheme,
+    'Saved theme:',
+    savedTheme,
+    'Prefers dark:',
+    prefersDark
+  );
+  setTheme(initialTheme as 'dark' | 'light');
+
+  // Add click event listener
+  themeToggle?.addEventListener('click', toggleTheme);
+</script>
+
+<style>
+  .theme-toggle {
+    background: var(--color-code-bg);
+    border: 2px solid var(--color-text);
+    padding: 0.25rem;
+    cursor: pointer;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 30px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 70px;
+    height: 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px var(--color-shadow);
+  }
+
+  .toggle-slider {
+    display: flex;
+    align-items: center;
+    width: 200%;
+    transform: translateX(0%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [data-theme='dark'] .toggle-slider {
+    transform: translateX(-50%);
+  }
+
+  .sun-icon,
+  .moon-icon {
+    flex: 1;
+    min-width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+    transition: color 0.3s ease;
+  }
+
+  .theme-toggle:hover {
+    background-color: var(--color-code-bg);
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+
+  .theme-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-accent);
+  }
+
+  /* Add a sliding background effect */
+  .theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 28px;
+    height: 28px;
+    background-color: var(--color-text);
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px var(--color-shadow);
+  }
+
+  [data-theme='dark'] .theme-toggle::before {
+    transform: translateX(34px);
+  }
+
+  /* Active state animation */
+  .theme-toggle:active::before {
+    transform: scale(0.9);
+  }
+
+  [data-theme='dark'] .theme-toggle:active::before {
+    transform: translateX(34px) scale(0.9);
+  }
+</style>

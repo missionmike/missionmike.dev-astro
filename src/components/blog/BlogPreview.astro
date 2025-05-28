@@ -88,6 +88,8 @@ const truncatedExcerpt =
   .card {
     transition: transform 0.2s ease-in-out;
     opacity: 0;
+    background-color: var(--color-header-bg);
+    border: 1px solid var(--color-border);
   }
   [data-aos='fade-up'].aos-animate {
     opacity: 1;
@@ -96,10 +98,10 @@ const truncatedExcerpt =
     transform: translateY(-5px);
   }
   .card-title {
-    color: #333;
+    color: var(--color-text);
   }
   a:hover .card-title {
-    color: #333;
+    color: var(--color-text);
   }
   .card-img-top {
     overflow: hidden;
@@ -132,26 +134,26 @@ const truncatedExcerpt =
     font-size: 0.75em;
     font-weight: 500;
     line-height: 1;
-    color: #fff;
+    color: var(--color-background);
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.25rem;
-    background-color: #495057;
+    background-color: var(--color-text);
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
     text-decoration: none;
     transition: all 0.2s ease-in-out;
   }
   .tag-link:hover {
-    background-color: #343a40;
-    color: #fff;
+    background-color: var(--color-text-light);
+    color: var(--color-background);
     transform: translateY(-1px);
   }
   .tag-link[href='/blog/tag/legacy'] {
-    background-color: #dc3545;
+    background-color: var(--color-accent);
   }
   .tag-link[href='/blog/tag/legacy']:hover {
-    background-color: #bb2d3b;
+    opacity: 0.9;
   }
 </style>

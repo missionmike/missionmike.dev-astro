@@ -13,7 +13,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -100,6 +100,44 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
     );
   }
 
+  /* Bootstrap theme overrides */
+  .text-muted {
+    color: var(--color-text-light) !important;
+  }
+
+  .btn-outline-dark {
+    color: var(--color-text);
+    border-color: var(--color-text);
+  }
+
+  .btn-outline-dark:hover {
+    color: var(--color-background);
+    background-color: var(--color-text);
+    border-color: var(--color-text);
+  }
+
+  .btn-outline-primary {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .btn-outline-primary:hover {
+    color: var(--color-background);
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .btn-outline-secondary {
+    color: var(--color-text-light);
+    border-color: var(--color-text-light);
+  }
+
+  .btn-outline-secondary:hover {
+    color: var(--color-background);
+    background-color: var(--color-text-light);
+    border-color: var(--color-text-light);
+  }
+
   main {
     min-height: calc(100vh - 200px);
 
@@ -110,7 +148,8 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
 
   .footer {
     padding: 2rem 0;
-    background-color: #f8f9fa;
+    background-color: var(--color-footer-bg);
     text-align: center;
+    color: var(--color-text);
   }
 </style>
