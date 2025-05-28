@@ -55,7 +55,7 @@ const tags = getAllTags();
               tags.map((tag, index) => (
                 <a
                   href={`/blog/tag/${tag.toLowerCase()}`}
-                  class={styles.tagLink}
+                  class="tag-link"
                   data-aos={index % 2 === 0 ? 'fade-left' : 'fade-up'}
                   data-aos-delay={300 + index * 50}
                 >

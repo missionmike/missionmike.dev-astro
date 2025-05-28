@@ -10,7 +10,7 @@
   --color-text: #1a1a1a;
   --color-text-light: #666666;
   --color-background: #ffffff;
-  --color-accent: #7c3aff;
+  --color-accent: #fd6eff;
   --color-border: #e5e5e5;
   --color-code-bg: #f5f5f5;
   --color-header-bg: rgba(255, 255, 255, 0.8);
@@ -31,7 +31,7 @@
   --color-text: #ffffff;
   --color-text-light: #cccccc;
   --color-background: #1a1a1a;
-  --color-accent: #9d6aff;
+  --color-accent: #6a00ff;
   --color-border: #333333;
   --color-code-bg: #2a2a2a;
   --color-header-bg: rgba(26, 26, 26, 0.8);
@@ -213,7 +213,34 @@ section {
   color: var(--color-text);
 }
 
-/* Remove the global transition */
-* {
-  /* Remove transition properties */
+.tag-link {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  color: var(--color-text);
+  text-decoration: none;
+  margin: 0.5rem;
+  background-color: var(--color-accent);
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.tag-link:hover {
+  background-color: var(--color-text);
+  color: var(--color-background);
+  border: 1px solid var(--color-text);
+}
+
+.tag-link[href='/blog/tag/legacy'] {
+  background-color: var(--color-accent);
+}
+.tag-link[href='/blog/tag/legacy']:hover {
+  opacity: 0.9;
 }
