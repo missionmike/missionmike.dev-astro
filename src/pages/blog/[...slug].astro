@@ -16,7 +16,7 @@ const { post } = Astro.props as { post: CollectionEntry<'posts'> };
 const { Content } = await post.render();
 ---
 
-<Layout title={post.data.title} description={post.data.excerpt}>
+<Layout title={post.data.title} description={post.data.summary}>
   <article class="container py-5">
     {
       post.data.featuredImage && (

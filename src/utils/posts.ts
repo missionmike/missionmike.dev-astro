@@ -1,30 +1,16 @@
 import fs from 'fs';
+import { getAllFiles } from './files';
 import matter from 'gray-matter';
 import path from 'path';
 
 export interface Post {
   title: string;
   date: string;
-  excerpt: string;
+  summary: string;
   path: string;
   tags?: string[];
   featuredImage?: string;
   featured?: boolean;
-}
-
-function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
-  const files = fs.readdirSync(dirPath);
-
-  files.forEach((file) => {
-    const fullPath = path.join(dirPath, file);
-    if (fs.statSync(fullPath).isDirectory()) {
-      arrayOfFiles = getAllFiles(fullPath, arrayOfFiles);
-    } else if (file.endsWith('.mdx')) {
-      arrayOfFiles.push(fullPath);
-    }
-  });
-
-  return arrayOfFiles;
 }
 
 export function getAllPosts(): Post[] {
@@ -42,7 +28,7 @@ export function getAllPosts(): Post[] {
       path: `blog/${id}`,
       title: data.title || '',
       date: data.date || new Date().toISOString(),
-      excerpt: data.excerpt || data.summary || content.split('\n')[0],
+      summary: data.summary || content.split('\n')[0],
       tags: data.tags || [],
       featuredImage: data.featuredImage || undefined,
       featured: data.featured || false,
@@ -50,6 +36,10 @@ export function getAllPosts(): Post[] {
   });
 
   return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function getFeaturedPosts(): Post[] {
+  return getAllPosts().filter((post) => post.featured);
 }
 
 export function getAllTags(): string[] {

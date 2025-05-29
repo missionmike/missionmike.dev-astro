@@ -3,10 +3,13 @@ import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import SocialBar from '../components/SocialBar.astro';
 import BlogPreview from '../components/blog/BlogPreview.astro';
+import ProjectPreview from '../components/blog/ProjectPreview.astro';
 import styles from '../styles/pages/index.module.scss';
-import { getAllPosts, getAllTags } from '../utils/posts';
+import { getAllTags, getFeaturedPosts } from '../utils/posts';
+import { getFeaturedProjects } from '../utils/projects';
 
-const featuredPosts = getAllPosts().filter((post) => post.featured);
+const featuredPosts = getFeaturedPosts();
+const featuredProjects = getFeaturedProjects();
 const tags = getAllTags();
 ---
 
@@ -25,44 +28,57 @@ const tags = getAllTags();
             software engineer on a mission to <br />
             innovate, inspire &amp; iterate
           </span>
+          <SocialBar />
         </div>
       </div>
       <div class="row">
-        <div class="col" data-aos="fade-right">
-          <SocialBar />
-          <div class={styles.imageFrame}>
-            <div class="image-wrapper">
-              <Image
-                src="/static/images/family-gaming.jpg"
-                alt="Photo of Mission Mike playing videogames with his three children. Sitting at a computer desk with a green screen behind them."
-                width={800}
-                height={600}
-                class="w-100 h-100 object-fit-cover"
-              />
-            </div>
-            <p>Work hard, play hard!</p>
-          </div>
+        <div class="col-lg d-flex flex-column justify-content-center">
+          <span class={styles.h2} data-aos="fade-in">Featured Project:</span>
+          <ProjectPreview project={featuredProjects[0]} />
         </div>
         <div class="col-lg d-flex flex-column justify-content-center">
-          <span class={styles.h2} data-aos="fade-in">Featured post:</span>
+          <span class={styles.h2} data-aos="fade-in">Featured Blog Post:</span>
           <BlogPreview post={featuredPosts[0]} />
         </div>
-        <div class="row mt-5" data-aos="fade-in">
+        <div class="row mt-2 mb-5" data-aos="fade-in">
           <div>
             <br />
             <h2 class={styles.h2}>Tags &amp; Categories</h2>
-            {
-              tags.map((tag, index) => (
-                <a
-                  href={`/blog/tag/${tag.toLowerCase()}`}
-                  class="tag-link"
-                  data-aos={index % 2 === 0 ? 'fade-left' : 'fade-up'}
-                  data-aos-delay={300 + index * 50}
+            <div class="tag-container">
+              {
+                tags.map((tag, index) => (
+                  <a
+                    href={`/blog/tag/${tag.toLowerCase()}`}
+                    class="tag-link"
+                    data-aos={index % 2 === 0 ? 'fade-left' : 'fade-up'}
+                    data-aos-delay={300 + index * 50}
+                  >
+                    {tag}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" data-aos="fade-right">
+            <div class={styles.imageFrame}>
+              <div class="image-wrapper">
+                <Image
+                  src="/static/images/family-gaming.jpg"
+                  alt="Photo of Mission Mike playing videogames with his kids. Sitting at a computer desk with a green screen behind them."
+                  width={800}
+                  height={600}
+                  class="w-100 h-100 object-fit-cover"
+                />
+              </div>
+              <p>
+                Work hard, play hard! Follow the whole family on <a
+                  href="https://www.youtube.com/@sleepyslawths"
+                  target="_blank">YouTube!</a
                 >
-                  {tag}
-                </a>
-              ))
-            }
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -70,16 +86,26 @@ const tags = getAllTags();
   </div>
 
   <style>
+    .subtitle {
+      @media (max-width: 768px) {
+        margin-top: 1rem;
+        margin-bottom: 0;
+      }
+    }
+
     .image-wrapper {
       position: relative;
       width: 100%;
-      height: 400px;
       overflow: hidden;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
       @media (max-width: 768px) {
         height: 200px;
       }
+    }
+
+    .image-wrapper + p {
+      background-color: var(--color-background);
     }
 
     .object-fit-cover {

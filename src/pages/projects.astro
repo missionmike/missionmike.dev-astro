@@ -1,27 +1,27 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import ProjectsLayout from '../layouts/Projects.astro';
+import ProjectPreview from '../components/blog/ProjectPreview.astro';
 
-const projects = await getCollection('projects', ({ data }: CollectionEntry<'projects'>) => {
-  return import.meta.env.PROD ? !data.draft : true;
-});
+type Project = CollectionEntry<'projects'>;
+
+const projects = await getCollection('projects');
 
 // Sort projects by order if available, then by title
-const sortedProjects = projects.sort(
-  (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) => {
-    if (a.data.order && b.data.order) {
-      return a.data.order - b.data.order;
-    }
-    return a.data.title.localeCompare(b.data.title);
+const sortedProjects: Project[] = projects.sort((a: Project, b: Project) => {
+  if (a.data.order && b.data.order) {
+    return a.data.order - b.data.order;
   }
-);
+  return a.data.title.localeCompare(b.data.title);
+});
 ---
 
 <Layout title="Projects | Mission Mike" description="Projects by Mission Mike">
   <div class="container">
     <h1 class="mb-4">Projects</h1>
-    <ProjectsLayout projects={sortedProjects} />
+    <div class="projects-container">
+      {sortedProjects.map((project: Project) => <ProjectPreview project={project.data} />)}
+    </div>
   </div>
 </Layout>
 

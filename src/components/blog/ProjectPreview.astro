@@ -1,31 +1,25 @@
 ---
-type Post = {
-  title: string;
-  date: string;
-  updated?: string;
-  summary: string;
-  path: string;
-  tags?: string[];
-  featuredImage?: string;
-};
+import type { Project } from '../../utils/projects';
 
 interface Props {
-  post: Post;
+  project: Project;
 }
 
-const { post } = Astro.props;
-const truncatedSummary =
-  post.summary.length > 150 ? post.summary.slice(0, 150) + '...' : post.summary;
+const { project } = Astro.props;
+const { featuredImage, title, path, githubUrl, liveUrl, tags, summary } = project;
+const truncatedSummary = summary?.length > 150 ? summary.slice(0, 150) + '...' : summary;
+
+console.log(project);
 ---
 
 <div class="card h-100" data-aos="fade-up">
   {
-    post.featuredImage && (
-      <a href={post.path}>
+    featuredImage && (
+      <a href={path}>
         <div class="card-img-top aspect-ratio-16-9">
           <img
-            src={`/static/images/${post.featuredImage}`}
-            alt={post.title}
+            src={`/static/images/${featuredImage}`}
+            alt={title}
             class="w-100 h-100 object-fit-cover"
           />
         </div>
@@ -34,42 +28,40 @@ const truncatedSummary =
   }
   <div class="card-body">
     <h2 class="card-title h5">
-      <a href={post.path}>{post.title}</a>
+      <a href={path}>{title}</a>
     </h2>
-    <p class="card-text text-muted small d-flex justify-content-between">
-      <span>
-        Published
-        {
-          new Date(post.date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })
-        }
-      </span>
-      <span
-        ><em>
-          {
-            post.updated && (
-              <>
-                Updated{' '}
-                {new Date(post.updated).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </>
-            )
-          }
-        </em>
-      </span>
-    </p>
     <p class="card-text">{truncatedSummary}</p>
+    <div class="d-flex gap-2 mb-3">
+      {
+        githubUrl && (
+          <a
+            href={githubUrl}
+            class="btn btn-sm btn-outline-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        )
+      }
+      {
+        liveUrl && (
+          <a
+            href={liveUrl}
+            class="btn btn-sm btn-outline-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Live Site
+          </a>
+        )
+      }
+    </div>
     {
-      post.tags && post.tags.length > 0 && (
+      tags && tags.length > 0 && (
         <div class="mt-2 tag-container">
-          {post.tags.map((tag: string) => (
-            <a href={`/blog/tag/${tag.toLowerCase()}`} class="tag-link">
+          {tags.map((tag: string) => (
+            <a href={`/projects/tag/${tag.toLowerCase()}`} class="tag-link">
               {tag}
             </a>
           ))}
@@ -84,6 +76,10 @@ const truncatedSummary =
     display: block;
     color: inherit;
     text-decoration: none;
+  }
+
+  a.btn {
+    display: inline-block;
   }
 
   .card {

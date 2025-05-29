@@ -5,7 +5,6 @@ const posts = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.string(),
-    excerpt: z.string().optional(),
     summary: z.string().optional(),
     tags: z.array(z.string()).optional(),
     updated: z.string().optional(),
@@ -20,7 +19,6 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.string(),
-    excerpt: z.string().optional(),
     summary: z.string().optional(),
     tags: z.array(z.string()).optional(),
     updated: z.string().optional(),
