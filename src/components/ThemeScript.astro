@@ -1,0 +1,25 @@
+<script is:inline>
+  // Get theme from cookie or system preference
+  function getThemePreference() {
+    const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('theme='));
+    if (cookieValue) {
+      const theme = cookieValue.split('=')[1];
+      if (theme === 'light' || theme === 'dark') {
+        return theme;
+      }
+    }
+    return 'dark'; // Default theme
+  }
+
+  // Apply theme immediately before page renders
+  const theme = getThemePreference();
+  document.documentElement.setAttribute('data-theme', theme);
+  document.body.setAttribute('data-theme', theme);
+
+  // Prevent flash by hiding the body until the theme is set
+  document.documentElement.style.visibility = 'hidden';
+  window.addEventListener('load', () => {
+    document.documentElement.style.visibility = '';
+  });
+</script>
+

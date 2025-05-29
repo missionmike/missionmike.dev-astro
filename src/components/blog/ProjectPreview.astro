@@ -6,10 +6,8 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { featuredImage, title, path, githubUrl, liveUrl, tags, summary } = project;
+const { featuredImage, title, githubUrl, liveUrl, tags, summary, path } = project;
 const truncatedSummary = summary?.length > 150 ? summary.slice(0, 150) + '...' : summary;
-
-console.log(project);
 ---
 
 <div class="card h-100" data-aos="fade-up">

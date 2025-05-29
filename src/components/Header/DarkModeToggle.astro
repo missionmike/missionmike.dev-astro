@@ -44,7 +44,7 @@
 </button>
 
 <script>
-  import { setCookie, getThemePreference } from '../../utils/cookies';
+  import { setCookie } from '../../utils/cookies';
 
   const htmlElement = document.documentElement;
 
@@ -62,12 +62,6 @@
     setTheme(newTheme as 'dark' | 'light');
   }
 
-  // Initialize theme based on cookie or system preference
-  const initialTheme = getThemePreference();
-
-  // Set initial theme
-  setTheme(initialTheme);
-
   // Add click event listeners to all theme toggles
   function initializeThemeToggles() {
     const themeToggles = document.querySelectorAll('.theme-toggle');
@@ -79,21 +73,9 @@
   // Initialize on load and after any dynamic content changes
   document.addEventListener('DOMContentLoaded', initializeThemeToggles);
   initializeThemeToggles();
-
-  // Add transition class after initial load to prevent transition on page load
-  setTimeout(() => {
-    document.body.classList.add('theme-loaded');
-  }, 100);
 </script>
 
 <style>
-  /* Add transition class to enable animations after initial load */
-  :global(body.theme-loaded) .theme-toggle,
-  :global(body.theme-loaded) .toggle-slider,
-  :global(body.theme-loaded) .theme-toggle::before {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
   .theme-toggle {
     background: var(--color-code-bg);
     border: 2px solid var(--color-text);
