@@ -5,7 +5,9 @@ import ProjectPreview from '../components/blog/ProjectPreview.astro';
 
 type Project = CollectionEntry<'projects'>;
 
-const projects = await getCollection('projects');
+const projects = await getCollection('projects', ({ data }: Project) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
 
 // Sort projects by order if available, then by title
 const sortedProjects: Project[] = projects.sort((a: Project, b: Project) => {
@@ -20,7 +22,16 @@ const sortedProjects: Project[] = projects.sort((a: Project, b: Project) => {
   <div class="container">
     <h1 class="mb-4">Projects</h1>
     <div class="projects-container">
-      {sortedProjects.map((project: Project) => <ProjectPreview project={project.data} />)}
+      {
+        sortedProjects.map((project: Project) => (
+          <ProjectPreview
+            project={{
+              ...project.data,
+              path: `/project/${project.slug}`,
+            }}
+          />
+        ))
+      }
     </div>
   </div>
 </Layout>
