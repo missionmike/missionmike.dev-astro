@@ -9,6 +9,7 @@ export interface Post {
   path: string;
   tags?: string[];
   featuredImage?: string;
+  featured?: boolean;
 }
 
 function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
@@ -44,6 +45,7 @@ export function getAllPosts(): Post[] {
       excerpt: data.excerpt || data.summary || content.split('\n')[0],
       tags: data.tags || [],
       featuredImage: data.featuredImage || undefined,
+      featured: data.featured || false,
     } as Post;
   });
 

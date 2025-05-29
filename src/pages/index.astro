@@ -6,7 +6,7 @@ import BlogPreview from '../components/blog/BlogPreview.astro';
 import styles from '../styles/pages/index.module.scss';
 import { getAllPosts, getAllTags } from '../utils/posts';
 
-const latestPost = getAllPosts()[0];
+const featuredPosts = getAllPosts().filter((post) => post.featured);
 const tags = getAllTags();
 ---
 
@@ -44,8 +44,8 @@ const tags = getAllTags();
           </div>
         </div>
         <div class="col-lg d-flex flex-column justify-content-center">
-          <span class={styles.h2} data-aos="fade-in">Latest post:</span>
-          <BlogPreview post={latestPost} />
+          <span class={styles.h2} data-aos="fade-in">Featured post:</span>
+          <BlogPreview post={featuredPosts[0]} />
         </div>
         <div class="row mt-5" data-aos="fade-in">
           <div>
