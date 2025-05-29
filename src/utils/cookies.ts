@@ -29,12 +29,11 @@ export function setCookie(name: string, value: string): void {
  */
 export function getThemePreference(): 'dark' | 'light' {
   const savedTheme = getCookie('theme');
+
   if (savedTheme === 'dark' || savedTheme === 'light') {
     return savedTheme;
   }
 
-  // Handle server-side rendering where window is not available
-  if (typeof window === 'undefined') return 'dark';
-
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  // Default to dark.
+  return 'dark';
 }

@@ -10,13 +10,15 @@
   --color-text: #1a1a1a;
   --color-text-light: #666666;
   --color-background: #ffffff;
-  --color-accent: #fd6eff;
+  --color-background-gradient: linear-gradient(to bottom, #ffffff, #f5f5f5);
+  --color-accent: #e6dafc;
   --color-border: #e5e5e5;
   --color-code-bg: #f5f5f5;
   --color-header-bg: rgba(255, 255, 255, 0.8);
   --color-footer-bg: #f8f9fa;
   --color-code-text: #1a1a1a;
   --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-legacy-tag: #c99cff;
 
   // Spacing
   --spacing-xs: 0.25rem;
@@ -31,13 +33,15 @@
   --color-text: #ffffff;
   --color-text-light: #cccccc;
   --color-background: #1a1a1a;
+  --color-background-gradient: radial-gradient(circle, #230045, #000000);
   --color-accent: #6a00ff;
   --color-border: #333333;
   --color-code-bg: #2a2a2a;
-  --color-header-bg: rgba(26, 26, 26, 0.8);
+  --color-header-bg: rgba(43, 0, 119, 0.9);
   --color-footer-bg: #2a2a2a;
   --color-code-text: #ffffff;
   --color-shadow: rgba(0, 0, 0, 0.3);
+  --color-legacy-tag: #350170;
 }
 
 // Base styles
@@ -46,13 +50,13 @@ html {
   font-size: 16px;
   line-height: 1.5;
   color: var(--color-text);
-  background-color: var(--color-background);
+  background: var(--color-background-gradient);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: var(--color-background);
+  background: var(--color-background-gradient);
   color: var(--color-text);
 }
 
@@ -239,10 +243,10 @@ section {
 }
 
 .tag-link[href='/blog/tag/legacy'] {
-  background-color: rgb(140, 16, 16);
+  background-color: var(--color-legacy-tag);
   color: white;
   &:hover {
-    background-color: rgb(140, 16, 16);
+    background-color: var(--color-legacy-tag);
     color: white;
   }
 }
