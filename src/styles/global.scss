@@ -239,8 +239,30 @@ section {
 }
 
 .tag-link[href='/blog/tag/legacy'] {
-  background-color: var(--color-accent);
+  background-color: rgb(140, 16, 16);
+  color: white;
+  &:hover {
+    background-color: rgb(140, 16, 16);
+    color: white;
+  }
 }
-.tag-link[href='/blog/tag/legacy']:hover {
-  opacity: 0.9;
+
+.video-container-short {
+  position: relative;
+  width: 100%;
+  max-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-shadow);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.video-container-short iframe {
+  width: auto;
+  height: 100%;
+  position: relative;
+  aspect-ratio: 9 / 16;
 }

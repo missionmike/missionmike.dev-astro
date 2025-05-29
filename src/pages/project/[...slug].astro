@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { components } from '../../components/mdx-components';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((post: CollectionEntry<'projects'>) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as { post: CollectionEntry<'projects'> };
+const { Content } = await post.render();
+---
+
+<Layout title={post.data.title} description={post.data.summary}>
+  <article class="container py-5">
+    {
+      post.data.featuredImage && (
+        <div class="featured-image-container mb-4">
+          <img
+            src={`/static/images/${post.data.featuredImage as string}`}
+            alt={post.data.title}
+            class="w-100"
+          />
+        </div>
+      )
+    }
+    <header class="mb-4">
+      <h1>{post.data.title}</h1>
+      <p class="text-muted small d-flex justify-content-between">
+        <time datetime={post.data.date}>
+          Published {new Date(post.data.date).toLocaleDateString()}
+        </time>
+        {
+          post.data.updated && (
+            <>
+              {' '}
+              <time datetime={post.data.updated}>
+                Updated {new Date(post.data.updated).toLocaleDateString()}
+              </time>
+            </>
+          )
+        }
+      </p>
+    </header>
+    <Content components={components} />
+  </article>
+</Layout>
+
+<style>
+  article {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .featured-image-container {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px var(--color-shadow);
+  }
+
+  .featured-image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+  }
+
+  time {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+  }
+</style>
