@@ -125,90 +125,109 @@ const photos: Photo[] = [
 ---
 
 <div class="photo-mosaic">
-  {
-    photos.map((photo) => (
-      <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-in">
-        <button class="photo-button" onclick="openModal(this)">
-          <img src={photo.src} alt={photo.alt} class="photo" />
-        </button>
-      </div>
-    ))
-  }
+  <div class="column">
+    {
+      photos
+        .filter((_, i) => i % 3 === 0)
+        .map((photo) => (
+          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-in">
+            <button
+              class="photo-button"
+              data-src={photo.src}
+              data-alt={photo.alt}
+              data-caption={photo.caption}
+            >
+              <img src={photo.src} alt={photo.alt} class="photo" />
+            </button>
+          </div>
+        ))
+    }
+  </div>
+  <div class="column">
+    {
+      photos
+        .filter((_, i) => i % 3 === 1)
+        .map((photo) => (
+          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-in">
+            <button
+              class="photo-button"
+              data-src={photo.src}
+              data-alt={photo.alt}
+              data-caption={photo.caption}
+            >
+              <img src={photo.src} alt={photo.alt} class="photo" />
+            </button>
+          </div>
+        ))
+    }
+  </div>
+  <div class="column">
+    {
+      photos
+        .filter((_, i) => i % 3 === 2)
+        .map((photo) => (
+          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-in">
+            <button
+              class="photo-button"
+              data-src={photo.src}
+              data-alt={photo.alt}
+              data-caption={photo.caption}
+            >
+              <img src={photo.src} alt={photo.alt} class="photo" />
+            </button>
+          </div>
+        ))
+    }
+  </div>
 </div>
 
 <!-- Modal -->
 <div id="photoModal" class="modal">
   <div class="modal-content">
-    <span class="close-button" onclick="closeModal()">&times;</span>
-    <button class="nav-button prev" onclick="navigateSlide(-1)">&lt;</button>
-    <button class="nav-button next" onclick="navigateSlide(1)">&gt;</button>
+    <span class="close-button">&times;</span>
+    <button class="nav-button prev">&lt;</button>
+    <button class="nav-button next">&gt;</button>
     <div class="slide-container">
-      <img id="modalImage" src={photos[0].src} alt={photos[0].alt} />
+      <img id="modalImage" src="" alt="" />
     </div>
     <p id="modalCaption" class="caption"></p>
   </div>
 </div>
 
-<script define:vars={{ photos }}>
-  document.addEventListener('DOMContentLoaded', () => {
-    let currentPhotoIndex = 0;
+<script>
+  let currentPhotoIndex = 0;
+  let photoButtons: NodeListOf<HTMLButtonElement>;
 
-    // Make the functions available globally
-    window.openModal = (button) => {
-      const img = button.querySelector('img');
-      if (!img) return;
+  function initPhotoModal() {
+    photoButtons = document.querySelectorAll('.photo-button');
+    const modal = document.getElementById('photoModal');
+    const closeButton = modal?.querySelector('.close-button');
+    const prevButton = modal?.querySelector('.nav-button.prev');
+    const nextButton = modal?.querySelector('.nav-button.next');
 
-      // Find the index of the clicked photo
-      currentPhotoIndex = photos.findIndex((photo) => photo.src === img.src);
+    // Add click handlers to all photo buttons
+    photoButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        currentPhotoIndex = index;
+        openModal();
+      });
+    });
 
-      const modal = document.getElementById('photoModal');
-      const modalImg = document.getElementById('modalImage');
-      const modalCaption = document.getElementById('modalCaption');
+    // Add modal controls
+    closeButton?.addEventListener('click', closeModal);
+    prevButton?.addEventListener('click', () => navigateSlide(-1));
+    nextButton?.addEventListener('click', () => navigateSlide(1));
 
-      if (modal && modalImg && modalCaption) {
-        modal.style.display = 'flex';
-        updateSlide();
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        closeModal();
       }
-    };
-
-    window.navigateSlide = (direction) => {
-      currentPhotoIndex = (currentPhotoIndex + direction + photos.length) % photos.length;
-      updateSlide();
-    };
-
-    function updateSlide() {
-      const modalImg = document.getElementById('modalImage');
-      const modalCaption = document.getElementById('modalCaption');
-
-      if (modalImg && modalCaption) {
-        // Start fade out
-        modalImg.style.opacity = '0';
-        modalCaption.style.opacity = '0';
-
-        setTimeout(() => {
-          // Update content
-          modalImg.src = photos[currentPhotoIndex].src;
-          modalImg.alt = photos[currentPhotoIndex].alt;
-          modalCaption.textContent = photos[currentPhotoIndex].caption;
-
-          // Fade in
-          modalImg.style.opacity = '1';
-          modalCaption.style.opacity = '1';
-        }, 200); // Match this with CSS transition duration
-      }
-    }
-
-    window.closeModal = () => {
-      const modal = document.getElementById('photoModal');
-      if (modal) {
-        modal.style.display = 'none';
-      }
-    };
+    });
 
     // Keyboard navigation
-    document.addEventListener('keydown', (event) => {
-      const modal = document.getElementById('photoModal');
-      if (modal && modal.style.display === 'flex') {
+    window.addEventListener('keydown', (event) => {
+      if (modal?.style.display === 'flex') {
         switch (event.key) {
           case 'ArrowLeft':
             navigateSlide(-1);
@@ -222,72 +241,79 @@ const photos: Photo[] = [
         }
       }
     });
+  }
 
-    // Close modal when clicking outside the image
-    window.onclick = (event) => {
-      const modal = document.getElementById('photoModal');
-      if (event.target === modal) {
-        closeModal();
-      }
-    };
-  });
+  function openModal() {
+    const modal = document.getElementById('photoModal');
+    if (!modal) return;
+
+    const currentButton = photoButtons[currentPhotoIndex];
+    const modalImg = document.getElementById('modalImage') as HTMLImageElement;
+    const modalCaption = document.getElementById('modalCaption');
+
+    if (modalImg && modalCaption && currentButton.dataset.src) {
+      modal.style.display = 'flex';
+      modalImg.src = currentButton.dataset.src;
+      modalImg.alt = currentButton.dataset.alt || '';
+      modalCaption.textContent = currentButton.dataset.caption || '';
+    }
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('photoModal');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+
+  function navigateSlide(direction: number) {
+    currentPhotoIndex = (currentPhotoIndex + direction + photoButtons.length) % photoButtons.length;
+    openModal();
+  }
+
+  // Initialize when the DOM is ready
+  document.addEventListener('DOMContentLoaded', initPhotoModal);
 </script>
 
 <style>
   .photo-mosaic {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    padding: 1rem;
+    width: 100%;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .photo-tile {
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-
-    &.small {
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-
-    &.medium {
-      grid-column: span 3;
-      grid-row: span 3;
-    }
-
-    &.large {
-      grid-column: span 4;
-      grid-row: span 4;
-    }
+    width: 100%;
   }
 
-  @media (max-width: 1200px) {
+  .photo-tile.small {
+    aspect-ratio: 1;
+  }
+
+  .photo-tile.medium {
+    aspect-ratio: 4/5;
+  }
+
+  .photo-tile.large {
+    aspect-ratio: 3/4;
+  }
+
+  @media (max-width: 1024px) {
     .photo-mosaic {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
     }
-  }
-
-  @media (max-width: 768px) {
-    .photo-mosaic {
-      grid-template-columns: repeat(2, 1fr);
-
-      &.large {
-        grid-column: span 2;
-        grid-row: span 2;
-      }
-
-      &.medium {
-        grid-column: span 2;
-        grid-row: span 2;
-      }
-    }
-  }
-
-  .photo-tile:hover {
-    transform: scale(1.02);
   }
 
   .photo-button {
