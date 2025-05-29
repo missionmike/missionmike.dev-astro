@@ -7,6 +7,7 @@ import ProjectPreview from '../components/blog/ProjectPreview.astro';
 import styles from '../styles/pages/index.module.scss';
 import { getAllTags, getFeaturedPosts } from '../utils/posts';
 import { getFeaturedProjects } from '../utils/projects';
+import TagList from '../components/blog/TagList.astro';
 
 const featuredPosts = getFeaturedPosts();
 const featuredProjects = getFeaturedProjects();
@@ -44,20 +45,7 @@ const tags = getAllTags();
           <div>
             <br />
             <h2 class={styles.h2}>Tags &amp; Categories</h2>
-            <div class="tag-container">
-              {
-                tags.map((tag, index) => (
-                  <a
-                    href={`/blog/tag/${tag.toLowerCase()}`}
-                    class="tag-link"
-                    data-aos={index % 2 === 0 ? 'fade-left' : 'fade-up'}
-                    data-aos-delay={300 + index * 50}
-                  >
-                    {tag}
-                  </a>
-                ))
-              }
-            </div>
+            <TagList tags={tags} animate={true} />
           </div>
         </div>
         <div class="row">

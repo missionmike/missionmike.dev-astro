@@ -1,0 +1,67 @@
+---
+interface Props {
+  tags: string[];
+  animate?: boolean;
+}
+
+const { tags, animate = false } = Astro.props;
+---
+
+{
+  tags && tags.length > 0 && (
+    <div class="tag-container">
+      {tags.map((tag: string, index: number) => (
+        <a
+          href={`/blog/tag/${tag.toLowerCase()}`}
+          class="tag-link"
+          data-aos={animate ? (index % 2 === 0 ? 'fade-left' : 'fade-up') : undefined}
+          data-aos-delay={animate ? 300 + index * 50 : undefined}
+        >
+          {tag}
+        </a>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .tag-container {
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag-link {
+    display: inline-block;
+    padding: 0.25rem 1rem;
+    color: var(--color-text);
+    text-decoration: none;
+    background-color: var(--color-accent);
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &:hover {
+      background-color: var(--color-text);
+      color: var(--color-background);
+      border: 1px solid var(--color-text);
+    }
+
+    &[href='/blog/tag/legacy'] {
+      background-color: var(--color-legacy-tag);
+      color: white;
+      &:hover {
+        background-color: var(--color-legacy-tag);
+        color: white;
+      }
+    }
+  }
+</style>

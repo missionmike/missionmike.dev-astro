@@ -8,7 +8,7 @@ export interface Project {
   date: string;
   summary: string;
   path: string;
-  tags?: string[];
+  tags: string[];
   featuredImage?: string;
   featured?: boolean;
   githubUrl?: string;
