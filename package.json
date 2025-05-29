@@ -17,7 +17,10 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/mdx": "^4.2.5",
-    "@astrojs/react": "^4.2.6",
+    "@astrojs/react": "^4.3.0",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/twemoji": "^1.2.2",
+    "@iconify/react": "^6.0.0",
     "@types/node": "^22.15.3",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

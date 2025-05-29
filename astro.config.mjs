@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import react from '@astrojs/react';
 import { rehypeExternalLinks } from './src/plugins/rehype-external-links';
 import rehypeRaw from 'rehype-raw';
 
@@ -12,5 +13,6 @@ export default defineConfig({
       extendMarkdownConfig: true,
       smartypants: true,
     }),
+    react(),
   ],
 });

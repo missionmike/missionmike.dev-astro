@@ -1,23 +1,28 @@
 ---
 import DarkModeToggle from './DarkModeToggle.astro';
 import MobileDrawer from './MobileDrawer.astro';
+import IconWrapper from './IconWrapper';
 
 const links = [
   {
     href: '/',
     text: 'Home',
+    icon: 'twemoji:house',
   },
   {
     href: '/projects',
     text: 'Projects',
+    icon: 'twemoji:open-file-folder',
   },
   {
     href: '/blog',
     text: 'Blog',
+    icon: 'twemoji:memo',
   },
   {
     href: '/about',
     text: 'Bio',
+    icon: 'twemoji:technologist',
   },
 ];
 
@@ -37,11 +42,13 @@ const normalizedPath = currentPath === '/' ? '/' : (currentPath.split('/')?.[1] 
               link.href === '/'
                 ? normalizedPath === '/'
                 : normalizedPath.startsWith(link.href.substring(1));
-            console.log(normalizedPath, link.href, isActive);
             return (
               <li>
                 <a href={link.href} class:list={[{ active: isActive }]}>
-                  {link.text}
+                  <span class="icon-wrapper">
+                    <IconWrapper icon={link.icon} size={20} client:only="react" />
+                  </span>
+                  <span>{link.text}</span>
                 </a>
               </li>
             );
@@ -64,7 +71,10 @@ const normalizedPath = currentPath === '/' ? '/' : (currentPath.split('/')?.[1] 
         return (
           <li>
             <a href={link.href} class:list={[{ active: isActive }]}>
-              {link.text}
+              <span class="icon-wrapper">
+                <IconWrapper icon={link.icon} size={24} client:only="react" />
+              </span>
+              <span>{link.text}</span>
             </a>
           </li>
         );
@@ -122,6 +132,9 @@ const normalizedPath = currentPath === '/' ? '/' : (currentPath.split('/')?.[1] 
       transition: all 0.2s ease;
       padding: 0.5rem 1rem;
       border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
 
       &:hover {
         background-color: var(--color-shadow);
@@ -135,11 +148,11 @@ const normalizedPath = currentPath === '/' ? '/' : (currentPath.split('/')?.[1] 
     }
   }
 
-  .theme-toggle-wrapper {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-    padding-left: 2rem;
+  .icon-wrapper {
+    display: inline-block;
+    position: relative;
+    width: 24px;
+    height: 24px;
   }
 
   .mobile-nav-list {
@@ -158,7 +171,10 @@ const normalizedPath = currentPath === '/' ? '/' : (currentPath.split('/')?.[1] 
       font-size: 1.5rem;
       font-weight: 500;
       padding: 1rem;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
       transition: color 0.2s ease;
       border-radius: 8px;
 
@@ -177,6 +193,13 @@ const normalizedPath = currentPath === '/' ? '/' : (currentPath.split('/')?.[1] 
         font-size: 1.2rem;
       }
     }
+  }
+
+  .theme-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding-left: 2rem;
   }
 
   @media (max-width: 768px) {

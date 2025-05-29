@@ -35,8 +35,8 @@ const sortedPosts = posts.sort(
     <h1 class="mb-4">Posts tagged with "{tag}"</h1>
     <div class="row">
       {
-        sortedPosts.map((post) => (
-          <div class="col-md-6 mb-4">
+        sortedPosts.map((post, index) => (
+          <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay={index * 100}>
             <BlogPreview
               post={{
                 title: post.data.title,
@@ -53,11 +53,3 @@ const sortedPosts = posts.sort(
     </div>
   </div>
 </Layout>
-
-<style>
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #333;
-  }
-</style>
