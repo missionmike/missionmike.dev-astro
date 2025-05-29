@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Image } from 'astro:assets';
 import SocialBar from '../components/SocialBar.astro';
 import BlogPreview from '../components/blog/BlogPreview.astro';
 import ProjectPreview from '../components/blog/ProjectPreview.astro';
+import PhotoMosaic from '../components/PhotoMosaic.astro';
 import styles from '../styles/pages/index.module.scss';
 import { getAllTags, getFeaturedPosts } from '../utils/posts';
 import { getFeaturedProjects } from '../utils/projects';
@@ -49,24 +49,9 @@ const tags = getAllTags();
           </div>
         </div>
         <div class="row">
-          <div class="col" data-aos="fade-right">
-            <div class={styles.imageFrame}>
-              <div class="image-wrapper">
-                <Image
-                  src="/static/images/family-gaming.jpg"
-                  alt="Photo of Mission Mike playing videogames with his kids. Sitting at a computer desk with a green screen behind them."
-                  width={800}
-                  height={600}
-                  class="w-100 h-100 object-fit-cover"
-                />
-              </div>
-              <p>
-                Work hard, play hard! Follow the whole family on <a
-                  href="https://www.youtube.com/@sleepyslawths"
-                  target="_blank">YouTube!</a
-                >
-              </p>
-            </div>
+          <div class="col">
+            <h2 class={styles.h2}>Life at Mission Mike HQ</h2>
+            <PhotoMosaic />
           </div>
         </div>
       </div>
@@ -79,25 +64,6 @@ const tags = getAllTags();
         margin-top: 1rem;
         margin-bottom: 0;
       }
-    }
-
-    .image-wrapper {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-      @media (max-width: 768px) {
-        height: 200px;
-      }
-    }
-
-    .image-wrapper + p {
-      background-color: var(--color-background);
-    }
-
-    .object-fit-cover {
-      object-fit: cover;
     }
   </style>
 </Layout>

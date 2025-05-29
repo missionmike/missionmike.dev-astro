@@ -1,0 +1,413 @@
+---
+type Photo = {
+  src: string;
+  alt: string;
+  caption: string;
+  size?: 'small' | 'medium' | 'large'; // Controls the grid span
+};
+
+const photos: Photo[] = [
+  {
+    src: '/static/images/mosaic/family-gaming.jpg',
+    alt: 'Family gaming setup and entertainment area',
+    caption: 'Family gaming setup and entertainment area',
+    size: 'large',
+  },
+  {
+    src: '/static/images/mosaic/family-breakfast.jpg',
+    alt: 'Family breakfast time',
+    caption: 'Family breakfast time',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/family-gaming-photo-with-memphis.jpg',
+    alt: 'Gaming session with Memphis',
+    caption: 'Gaming session with Memphis',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/office-dogs.jpg',
+    alt: 'Office dogs keeping me company while working',
+    caption: 'Office dogs keeping me company while working',
+    size: 'small',
+  },
+  {
+    src: '/static/images/mosaic/dark-mode.jpg',
+    alt: 'Dark mode development setup',
+    caption: 'Dark mode development setup',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/sound-board.jpg',
+    alt: 'Audio mixing and sound board setup',
+    caption: 'Audio mixing and sound board setup',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/video-editing.jpg',
+    alt: 'Video editing workspace',
+    caption: 'Video editing workspace',
+    size: 'large',
+  },
+  {
+    src: '/static/images/mosaic/sound-booth-volunteering.jpg',
+    alt: 'Volunteering at the sound booth',
+    caption: 'Volunteering at the sound booth',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/old-office-space.jpg',
+    alt: 'Previous office setup',
+    caption: 'Previous office setup',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/michael-and-memphis.jpg',
+    alt: 'Michael and Memphis',
+    caption: 'Michael and Memphis',
+    size: 'small',
+  },
+  {
+    src: '/static/images/mosaic/office-rearrange.jpg',
+    alt: 'Office space rearrangement',
+    caption: 'Office space rearrangement',
+    size: 'large',
+  },
+  {
+    src: '/static/images/mosaic/family-photo-shoot.jpg',
+    alt: 'Family photo shoot',
+    caption: 'Family photo shoot',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/playing-wrecked.jpg',
+    alt: 'Playing Wrecked game',
+    caption: 'Playing Wrecked game',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/melody-fishing.jpg',
+    alt: 'Melody fishing',
+    caption: 'Melody fishing',
+    size: 'small',
+  },
+  {
+    src: '/static/images/mosaic/dad-and-memphis.jpg',
+    alt: 'Dad and Memphis together',
+    caption: 'Dad and Memphis together',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/remote-control-gummy.jpg',
+    alt: 'Remote control gummy',
+    caption: 'Remote control gummy',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/cleaning-max-mouth.jpg',
+    alt: "Cleaning Max's mouth",
+    caption: "Cleaning Max's mouth",
+    size: 'small',
+  },
+  {
+    src: '/static/images/mosaic/youtube-thumbnail-sleepy-slawths.jpg',
+    alt: 'YouTube thumbnail for Sleepy Slawths',
+    caption: 'YouTube thumbnail for Sleepy Slawths',
+    size: 'medium',
+  },
+  {
+    src: '/static/images/mosaic/happy-memphis-with-grandma.jpg',
+    alt: 'Happy Memphis with Grandma',
+    caption: 'Happy Memphis with Grandma',
+    size: 'small',
+  },
+]; // All photos now correspond to actual files in the directory
+---
+
+<div class="photo-mosaic">
+  {
+    photos.map((photo) => (
+      <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-in">
+        <button class="photo-button" onclick="openModal(this)">
+          <img src={photo.src} alt={photo.alt} class="photo" />
+        </button>
+      </div>
+    ))
+  }
+</div>
+
+<!-- Modal -->
+<div id="photoModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" onclick="closeModal()">&times;</span>
+    <button class="nav-button prev" onclick="navigateSlide(-1)">&lt;</button>
+    <button class="nav-button next" onclick="navigateSlide(1)">&gt;</button>
+    <div class="slide-container">
+      <img id="modalImage" src={photos[0].src} alt={photos[0].alt} />
+    </div>
+    <p id="modalCaption" class="caption"></p>
+  </div>
+</div>
+
+<script define:vars={{ photos }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    let currentPhotoIndex = 0;
+
+    // Make the functions available globally
+    window.openModal = (button) => {
+      const img = button.querySelector('img');
+      if (!img) return;
+
+      // Find the index of the clicked photo
+      currentPhotoIndex = photos.findIndex((photo) => photo.src === img.src);
+
+      const modal = document.getElementById('photoModal');
+      const modalImg = document.getElementById('modalImage');
+      const modalCaption = document.getElementById('modalCaption');
+
+      if (modal && modalImg && modalCaption) {
+        modal.style.display = 'flex';
+        updateSlide();
+      }
+    };
+
+    window.navigateSlide = (direction) => {
+      currentPhotoIndex = (currentPhotoIndex + direction + photos.length) % photos.length;
+      updateSlide();
+    };
+
+    function updateSlide() {
+      const modalImg = document.getElementById('modalImage');
+      const modalCaption = document.getElementById('modalCaption');
+
+      if (modalImg && modalCaption) {
+        // Start fade out
+        modalImg.style.opacity = '0';
+        modalCaption.style.opacity = '0';
+
+        setTimeout(() => {
+          // Update content
+          modalImg.src = photos[currentPhotoIndex].src;
+          modalImg.alt = photos[currentPhotoIndex].alt;
+          modalCaption.textContent = photos[currentPhotoIndex].caption;
+
+          // Fade in
+          modalImg.style.opacity = '1';
+          modalCaption.style.opacity = '1';
+        }, 200); // Match this with CSS transition duration
+      }
+    }
+
+    window.closeModal = () => {
+      const modal = document.getElementById('photoModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    };
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (event) => {
+      const modal = document.getElementById('photoModal');
+      if (modal && modal.style.display === 'flex') {
+        switch (event.key) {
+          case 'ArrowLeft':
+            navigateSlide(-1);
+            break;
+          case 'ArrowRight':
+            navigateSlide(1);
+            break;
+          case 'Escape':
+            closeModal();
+            break;
+        }
+      }
+    });
+
+    // Close modal when clicking outside the image
+    window.onclick = (event) => {
+      const modal = document.getElementById('photoModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+  });
+</script>
+
+<style>
+  .photo-mosaic {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .photo-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .photo-tile.small {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .photo-tile.medium {
+    grid-column: span 3;
+    grid-row: span 3;
+  }
+
+  .photo-tile.large {
+    grid-column: span 4;
+    grid-row: span 4;
+  }
+
+  @media (max-width: 1200px) {
+    .photo-mosaic {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .photo-mosaic {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .photo-tile.large {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .photo-tile.medium {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+
+  .photo-tile:hover {
+    transform: scale(1.02);
+  }
+
+  .photo-button {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  .photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .close-button {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  .slide-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    z-index: 2;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-button:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .prev {
+    left: -50px;
+  }
+
+  .next {
+    right: -50px;
+  }
+
+  #modalImage {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .caption {
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  @media (max-width: 768px) {
+    .nav-button {
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .next {
+      right: 10px;
+    }
+  }
+</style>
