@@ -20,7 +20,7 @@ const truncatedSummary =
   post.summary.length > 150 ? post.summary.slice(0, 150) + '...' : post.summary;
 ---
 
-<div class="card h-100" data-aos="fade-up">
+<div class="card h-100" data-aos="fade-up" data-aos-delay={100}>
   {
     post.featuredImage && (
       <a href={post.path}>

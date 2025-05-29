@@ -114,7 +114,7 @@ const photos: Photo[] = [
   {
     src: '/static/images/mosaic/youtube-thumbnail-sleepy-slawths.jpg',
     alt: 'YouTube thumbnail for Sleepy Slawths',
-    caption: 'YouTube thumbnail for Sleepy Slawths',
+    caption: 'YouTube profile photo for Sleepy Slawths',
     size: 'medium',
   },
   {
@@ -132,14 +132,14 @@ const photos: Photo[] = [
       photos
         .filter((_, i) => i % 3 === 0)
         .map((photo) => (
-          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-in">
+          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-right">
             <button
               class="photo-button"
               data-src={photo.src}
               data-alt={photo.alt}
               data-caption={photo.caption}
             >
-              <img src={photo.src} alt={photo.alt} class="photo" />
+              <img src={photo.src} alt={photo.alt} class="photo" data-aos="fade-right" />
             </button>
           </div>
         ))
@@ -150,14 +150,24 @@ const photos: Photo[] = [
       photos
         .filter((_, i) => i % 3 === 1)
         .map((photo) => (
-          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-in">
+          <div
+            class={`photo-tile ${photo.size || 'small'}`}
+            data-aos="fade-up"
+            data-aos-delay={100}
+          >
             <button
               class="photo-button"
               data-src={photo.src}
               data-alt={photo.alt}
               data-caption={photo.caption}
             >
-              <img src={photo.src} alt={photo.alt} class="photo" />
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                class="photo"
+                data-aos="fade-up"
+                data-aos-delay={100}
+              />
             </button>
           </div>
         ))
@@ -168,14 +178,20 @@ const photos: Photo[] = [
       photos
         .filter((_, i) => i % 3 === 2)
         .map((photo) => (
-          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-in">
+          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-left">
             <button
               class="photo-button"
               data-src={photo.src}
               data-alt={photo.alt}
               data-caption={photo.caption}
             >
-              <img src={photo.src} alt={photo.alt} class="photo" />
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                class="photo"
+                data-aos="fade-left"
+                data-aos-delay={200}
+              />
             </button>
           </div>
         ))
