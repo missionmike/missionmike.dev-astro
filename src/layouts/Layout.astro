@@ -114,23 +114,23 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
   .btn-outline-primary {
     color: var(--color-accent);
     border-color: var(--color-accent);
-  }
 
-  .btn-outline-primary:hover {
-    color: var(--color-background);
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
+    &:hover {
+      color: var(--color-background);
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
   }
 
   .btn-outline-secondary {
     color: var(--color-text-light);
     border-color: var(--color-text-light);
-  }
 
-  .btn-outline-secondary:hover {
-    color: var(--color-background);
-    background-color: var(--color-text-light);
-    border-color: var(--color-text-light);
+    &:hover {
+      color: var(--color-background);
+      background-color: var(--color-text-light);
+      border-color: var(--color-text-light);
+    }
   }
 
   main {

@@ -19,12 +19,14 @@ const sortedProjects = projects.sort(
 ---
 
 <Layout title="Projects | Mission Mike" description="Projects by Mission Mike">
-  <main class="min-h-screen">
-    <div class="py-8 sm:py-12">
-      <div class="container mx-auto px-4">
-        <h1 class="text-4xl sm:text-5xl font-bold text-center mb-12">Projects</h1>
-        <ProjectsLayout projects={sortedProjects} />
-      </div>
-    </div>
-  </main>
+  <div class="container">
+    <h1 class="mb-4">Projects</h1>
+    <ProjectsLayout projects={sortedProjects} />
+  </div>
 </Layout>
+
+<style>
+  h1 {
+    margin: 2rem 0;
+  }
+</style>

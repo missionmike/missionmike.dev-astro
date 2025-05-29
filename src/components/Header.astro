@@ -147,31 +147,35 @@ const normalizedPath = currentPath === '/' ? '/' : (currentPath.split('/')?.[1] 
     padding: 0;
     margin: 2rem 0;
     text-align: center;
-  }
 
-  .mobile-nav-list li {
-    margin-bottom: 1.5rem;
-  }
-
-  .mobile-nav-list a {
-    color: var(--color-text);
-    text-decoration: none;
-    font-size: 1.5rem;
-    font-weight: 500;
-    padding: 1rem;
-    display: block;
-    transition: color 0.2s ease;
-    border-radius: 8px;
-
-    &:hover {
-      color: var(--color-text-light);
-      background-color: var(--color-code-bg);
+    li {
+      margin-bottom: 1.5rem;
     }
 
-    &.active {
-      background-color: var(--color-code-bg);
-      color: var(--color-text-light);
-      font-weight: 700;
+    a {
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 500;
+      padding: 1rem;
+      display: block;
+      transition: color 0.2s ease;
+      border-radius: 8px;
+
+      &:hover {
+        color: var(--color-text-light);
+        background-color: var(--color-code-bg);
+      }
+
+      &.active {
+        background-color: var(--color-code-bg);
+        color: var(--color-text-light);
+        font-weight: 700;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 1.2rem;
+      }
     }
   }
 

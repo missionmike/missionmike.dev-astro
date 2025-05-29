@@ -27,7 +27,11 @@ const { projects } = Astro.props;
             )}
             <div class="project-content">
               <div class="project-header">
-                <h2>{title}</h2>
+                <h2>
+                  <a href={`/project/${project.slug}`} style="text-decoration: none">
+                    {title}
+                  </a>
+                </h2>
                 <p>{summary}</p>
               </div>
               <div class="project-links">
@@ -72,7 +76,6 @@ const { projects } = Astro.props;
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    padding: 1.5rem;
   }
 
   .featured-image-container {

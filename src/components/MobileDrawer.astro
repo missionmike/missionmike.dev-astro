@@ -36,7 +36,7 @@
     z-index: 100;
     position: fixed;
     top: 1rem;
-    right: 3rem;
+    right: 1rem;
     width: 48px;
     height: 42px;
     background-color: var(--color-background);
@@ -52,41 +52,40 @@
     background: var(--color-text);
     position: absolute;
     transition: all 0.3s ease-in-out;
-  }
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 24px;
+      height: 2px;
+      background: var(--color-text);
+      transition: all 0.3s ease-in-out;
+    }
 
-  .hamburger::before,
-  .hamburger::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    width: 24px;
-    height: 2px;
-    background: var(--color-text);
-    transition: all 0.3s ease-in-out;
-  }
+    &::before {
+      top: -8px;
+      transform-origin: center;
+    }
 
-  .hamburger::before {
-    top: -8px;
-    transform-origin: center;
-  }
-
-  .hamburger::after {
-    bottom: -8px;
-    transform-origin: center;
+    &::after {
+      bottom: -8px;
+      transform-origin: center;
+    }
   }
 
   :global(body.drawer-open) .hamburger {
     background: transparent !important;
-  }
 
-  :global(body.drawer-open) .hamburger::before {
-    top: 0;
-    transform: rotate(45deg);
-  }
+    &::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
 
-  :global(body.drawer-open) .hamburger::after {
-    bottom: 0;
-    transform: rotate(-45deg);
+    &::after {
+      bottom: 0;
+      transform: rotate(-45deg);
+    }
   }
 
   .mobile-drawer {
@@ -124,6 +123,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 5rem;
   }
 
   .drawer-overlay {
