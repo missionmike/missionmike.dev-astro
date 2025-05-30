@@ -3,8 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import SocialBar from '../components/SocialBar.astro';
 import BlogPreview from '../components/blog/BlogPreview.astro';
 import ProjectPreview from '../components/blog/ProjectPreview.astro';
-import PhotoMosaic from '../components/PhotoMosaic.astro';
-import styles from '../styles/pages/index.module.scss';
+import PhotoMosaic from '../components/PhotoMosaic/PhotoMosaic.astro';
 import { getAllTags, getFeaturedPosts } from '../utils/posts';
 import { getFeaturedProjects } from '../utils/projects';
 import TagList from '../components/blog/TagList.astro';
@@ -19,13 +18,13 @@ const tags = getAllTags();
   description="Michael Dinerstein is a software developer and graphic artist residing in the Pacific Northwest."
 >
   <div class="d-flex justify-content-center">
-    <div class={styles.index} style="max-width: 1200px;">
+    <div class="index" style="max-width: 1200px;">
       <div class="row" data-aos="fade-in">
         <div class="col">
-          <h1 class={styles.h1}>
-            missionmike<span class={styles.suffix}>.dev</span>
+          <h1>
+            missionmike<span class="suffix">.dev</span>
           </h1>
-          <span class={styles.subtitle}>
+          <span class="subtitle">
             software engineer on a mission to <br />
             innovate, inspire &amp; iterate
           </span>
@@ -34,23 +33,27 @@ const tags = getAllTags();
       </div>
       <div class="row">
         <div class="col-lg d-flex flex-column justify-content-center">
-          <span class={styles.h2} data-aos="fade-in">Featured Project:</span>
+          <h2 data-aos="fade-in">Featured Project:</h2>
           <ProjectPreview project={featuredProjects[0]} />
         </div>
         <div class="col-lg d-flex flex-column justify-content-center">
-          <span class={styles.h2} data-aos="fade-in">Featured Blog Post:</span>
+          <h2 data-aos="fade-in">Featured Blog Post:</h2>
           <BlogPreview post={featuredPosts[0]} />
         </div>
-        <div class="row mt-2 mb-5" data-aos="fade-in">
+      </div>
+      <div class="row">
+        <div class="col-lg mt-2 mb-5" data-aos="fade-in">
           <div>
             <br />
-            <h2 class={styles.h2}>Tags &amp; Categories</h2>
+            <h2>Tags &amp; Categories</h2>
             <TagList tags={tags} animate={true} />
           </div>
         </div>
-        <div class="row">
+      </div>
+      <div class="row">
+        <div class="col-lg">
           <div class="col">
-            <h2 class={styles.h2}>Life at Mission Mike HQ</h2>
+            <h2>Life at Mission Mike HQ</h2>
             <PhotoMosaic />
           </div>
         </div>
@@ -67,3 +70,53 @@ const tags = getAllTags();
     }
   </style>
 </Layout>
+
+<style>
+  .index {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    max-width: 100%;
+  }
+
+  h1 {
+    letter-spacing: 0.2rem;
+    color: var(--color-text);
+
+    @media (max-width: 576px) {
+      font-size: 1.8rem;
+      letter-spacing: 0.2rem;
+      margin-top: 0;
+    }
+
+    @media screen and (max-width: 320px) {
+      font-size: 1.5rem;
+      letter-spacing: 0.2rem;
+    }
+  }
+
+  .suffix {
+    color: var(--color-text-light);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    text-transform: none;
+    letter-spacing: 0.1rem;
+  }
+
+  h2 {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+
+    @media (max-width: 768px) {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+</style>

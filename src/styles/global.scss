@@ -51,6 +51,9 @@ html {
   line-height: 1.5;
   color: var(--color-text);
   background: var(--color-background-gradient);
+  position: relative;
+  width: 100vw;
+  max-width: 100vw;
 }
 
 body {
@@ -58,6 +61,15 @@ body {
   min-height: 100vh;
   background: var(--color-background-gradient);
   color: var(--color-text);
+  position: relative;
+  width: 100vw;
+  max-width: 100vw;
+
+  main {
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
 }
 
 // Typography

@@ -1,210 +1,28 @@
 ---
-type Photo = {
-  src: string;
-  alt: string;
-  caption: string;
-  size?: 'small' | 'medium' | 'large'; // Controls the grid span
-};
-
-const photos: Photo[] = [
-  {
-    src: '/static/images/mosaic/family-gaming.jpg',
-    alt: 'Family gaming setup and entertainment area',
-    caption:
-      'We love playing games together! We share videos of our games on our YouTube channels, ' +
-      '"Sleepy Slawth Gaming" and "Michael & Dad Gaming & Stuff"',
-    size: 'large',
-  },
-  {
-    src: '/static/images/mosaic/family-breakfast.jpg',
-    alt: 'Family breakfast time',
-    caption: 'Family is my motivation.',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/family-gaming-photo-with-memphis.jpg',
-    alt: 'Gaming session with Memphis',
-    caption: 'Playing "Hello Neighbor" with the whole fam!',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/office-dogs.jpg',
-    alt: 'Office dogs keeping me company while working',
-    caption: 'Office dogs keeping me company while working.',
-    size: 'small',
-  },
-  {
-    src: '/static/images/mosaic/dark-mode.jpg',
-    alt: 'Dark mode development setup',
-    caption: 'Dark mode.',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/sound-board.jpg',
-    alt: 'Audio mixing and sound board setup',
-    caption: 'I love mixing sound at South Beach Church.',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/video-editing.jpg',
-    alt: 'Video editing workspace',
-    caption: 'Working on my YouTube videos.',
-    size: 'large',
-  },
-  {
-    src: '/static/images/mosaic/sound-booth-volunteering.jpg',
-    alt: 'Volunteering at the sound booth',
-    caption: 'Volunteering at the sound booth, training Memphis to be a sound engineer.',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/old-office-space.jpg',
-    alt: 'Previous office setup',
-    caption: 'This was our office space before we moved to the new office.',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/michael-and-memphis.jpg',
-    alt: 'Michael and Memphis',
-    caption: 'Michael and Memphis',
-    size: 'small',
-  },
-  {
-    src: '/static/images/mosaic/office-rearrange.jpg',
-    alt: 'Office space rearrangement',
-    caption: 'Occasionally, we rearrange the office space.',
-    size: 'large',
-  },
-  {
-    src: '/static/images/mosaic/family-photo-shoot.jpg',
-    alt: 'Family photo shoot',
-    caption: 'Family photo shoot',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/playing-wrecked.jpg',
-    alt: 'Playing Wrecked game',
-    caption: 'Playing "Wrecked" with the fam!',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/melody-fishing.jpg',
-    alt: 'Melody fishing',
-    caption: 'Fishing with Melody and the family.',
-    size: 'small',
-  },
-  {
-    src: '/static/images/mosaic/dad-and-memphis.jpg',
-    alt: 'Dad and Memphis together',
-    caption: 'Grandpa and baby Memphis.',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/remote-control-gummy.jpg',
-    alt: 'Remote control gummy',
-    caption: 'Michael eats a remote control gummy.',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/cleaning-max-mouth.jpg',
-    alt: "Cleaning Max's mouth",
-    caption: "Memphis cleaning Max's mouth.",
-    size: 'small',
-  },
-  {
-    src: '/static/images/mosaic/youtube-thumbnail-sleepy-slawths.jpg',
-    alt: 'YouTube thumbnail for Sleepy Slawths',
-    caption: 'YouTube profile photo for Sleepy Slawths',
-    size: 'medium',
-  },
-  {
-    src: '/static/images/mosaic/happy-memphis-with-grandma.jpg',
-    alt: 'Happy Memphis with Grandma',
-    caption: 'Happy Memphis with Grandma',
-    size: 'small',
-  },
-];
+import PhotoColumn from './PhotoColumn.astro';
+import { photos } from '../../data/photos';
 ---
 
 <div class="photo-mosaic">
-  <div class="column">
-    {
-      photos
-        .filter((_, i) => i % 3 === 0)
-        .map((photo) => (
-          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-right">
-            <button
-              class="photo-button"
-              data-src={photo.src}
-              data-alt={photo.alt}
-              data-caption={photo.caption}
-            >
-              <img src={photo.src} alt={photo.alt} class="photo" data-aos="fade-right" />
-            </button>
-          </div>
-        ))
-    }
-  </div>
-  <div class="column">
-    {
-      photos
-        .filter((_, i) => i % 3 === 1)
-        .map((photo) => (
-          <div
-            class={`photo-tile ${photo.size || 'small'}`}
-            data-aos="fade-up"
-            data-aos-delay={100}
-          >
-            <button
-              class="photo-button"
-              data-src={photo.src}
-              data-alt={photo.alt}
-              data-caption={photo.caption}
-            >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                class="photo"
-                data-aos="fade-up"
-                data-aos-delay={100}
-              />
-            </button>
-          </div>
-        ))
-    }
-  </div>
-  <div class="column">
-    {
-      photos
-        .filter((_, i) => i % 3 === 2)
-        .map((photo) => (
-          <div class={`photo-tile ${photo.size || 'small'}`} data-aos="fade-left">
-            <button
-              class="photo-button"
-              data-src={photo.src}
-              data-alt={photo.alt}
-              data-caption={photo.caption}
-            >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                class="photo"
-                data-aos="fade-left"
-                data-aos-delay={200}
-              />
-            </button>
-          </div>
-        ))
-    }
-  </div>
+  <PhotoColumn photos={photos} columnIndex={0} />
+  <PhotoColumn photos={photos} columnIndex={1} />
+  <PhotoColumn photos={photos} columnIndex={2} />
 </div>
 
 <!-- Modal -->
 <div id="photoModal" class="modal">
   <div class="modal-content">
     <span class="close-button">&times;</span>
-    <button class="nav-button prev">&lt;</button>
-    <button class="nav-button next">&gt;</button>
+    <button class="nav-button prev">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+      </svg>
+    </button>
+    <button class="nav-button next">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"></path>
+      </svg>
+    </button>
     <div class="slide-container">
       <img id="modalBlurBackground" class="blur-background" src="" alt="" />
       <img id="modalImage" src="" alt="" />
@@ -369,54 +187,10 @@ const photos: Photo[] = [
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     width: 100%;
-  }
 
-  .column {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .photo-tile {
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    width: 100%;
-  }
-
-  .photo-tile.small {
-    aspect-ratio: 1;
-  }
-
-  .photo-tile.medium {
-    aspect-ratio: 4/5;
-  }
-
-  .photo-tile.large {
-    aspect-ratio: 3/4;
-  }
-
-  @media (max-width: 1024px) {
-    .photo-mosaic {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
+    @media (max-width: 1024px) {
+      gap: 0.25rem;
     }
-  }
-
-  .photo-button {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-  }
-
-  .photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
 
   .modal {
