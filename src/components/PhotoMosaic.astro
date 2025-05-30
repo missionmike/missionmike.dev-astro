@@ -223,6 +223,7 @@ const photos: Photo[] = [
     const closeButton = modal?.querySelector('.close-button');
     const prevButton = modal?.querySelector('.nav-button.prev');
     const nextButton = modal?.querySelector('.nav-button.next');
+    const slideContainer = modal?.querySelector('.slide-container');
 
     // Add click handlers to all photo buttons
     photoButtons.forEach((button, index) => {
@@ -233,9 +234,46 @@ const photos: Photo[] = [
     });
 
     // Add modal controls
-    closeButton?.addEventListener('click', closeModal);
+    if (closeButton) {
+      closeButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event from bubbling to window
+        closeModal();
+      });
+      closeButton.addEventListener('touchend', (e) => {
+        e.stopPropagation(); // Prevent event from bubbling to window
+        closeModal();
+      });
+    }
     prevButton?.addEventListener('click', () => navigateSlide(-1));
     nextButton?.addEventListener('click', () => navigateSlide(1));
+
+    // Add touch gesture support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    slideContainer?.addEventListener('touchstart', (e) => {
+      const touch = (e as TouchEvent).touches[0];
+      touchStartX = touch.screenX;
+    });
+
+    slideContainer?.addEventListener('touchend', (e) => {
+      const touch = (e as TouchEvent).changedTouches[0];
+      touchEndX = touch.screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50; // minimum distance for swipe
+      const swipeDistance = touchEndX - touchStartX;
+
+      if (Math.abs(swipeDistance) > swipeThreshold) {
+        if (swipeDistance > 0) {
+          navigateSlide(-1); // swipe right = previous
+        } else {
+          navigateSlide(1); // swipe left = next
+        }
+      }
+    }
 
     // Close modal when clicking outside
     window.addEventListener('click', (event) => {
@@ -435,6 +473,7 @@ const photos: Photo[] = [
     color: var(--color-text);
     font-size: 30px;
     cursor: pointer;
+    z-index: 1001;
   }
 
   .slide-container {
@@ -512,16 +551,15 @@ const photos: Photo[] = [
 
   @media (max-width: 768px) {
     .nav-button {
-      width: 30px;
-      height: 30px;
-      font-size: 18px;
+      display: none; /* Hide navigation arrows on mobile */
     }
 
-    .prev {
-      left: 10px;
+    .slide-container {
+      touch-action: pan-y pinch-zoom; /* Enable touch gestures */
     }
 
-    .next {
+    .close-button {
+      top: 10px;
       right: 10px;
     }
   }
