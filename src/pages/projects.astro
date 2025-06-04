@@ -44,4 +44,14 @@ const sortedProjects: Project[] = projects.sort((a: Project, b: Project) => {
   h1 {
     margin: 2rem 0;
   }
+
+  .projects-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

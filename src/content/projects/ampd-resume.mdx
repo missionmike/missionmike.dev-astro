@@ -1,0 +1,119 @@
+---
+title: "Amp'd Resume"
+date: '2025-06-03'
+tags: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'Terraform']
+draft: false
+featured: true
+summary: >
+  Tired of a boring resume? Amp'd Resume is a fun, interactive resume that's easy to update and
+  share.
+featuredImage: 'projects/ampd-resume.png'
+gitHubUrl: 'https://github.com/mission-minded-llc/ampdresume-theme'
+liveUrl: 'https://www.ampdresume.com'
+order: 0
+---
+
+# The Backstory
+
+In August 2024, I was laid off from my job at [The Real Deal](https://www.therealdeal.com/). I was
+looking for a new position, and I was feeling overwhelmed by the process. Every listing had 1000
+applicants within hours, and I felt that I needed a way to stand out from the crowd... so I created
+a resume that was fun and interactive.
+
+This project began with [Interactive Resume](https://github.com/missionmike/interactive-resume),
+which is a Next.js application that uses a Sanity backend CMS. This worked great at first for me to
+build and deploy a lightweight interactive resume.
+
+However, I wanted to expand this idea to make it easy for other people to sign up and create their
+own, without needing to sign up for Sanity, or have any development experience to get it off the
+ground.
+
+This was when I discovered my new passion for building SaaS products! I was able to apply the
+technical knowledge I had gained over my career and apply it to my very own project... it was
+enlightening and fun.
+
+You can view my own resume on the [Amp'd Resume](https://www.ampdresume.com/r/michael-dinerstein)
+platform.
+
+## The Tech Stack
+
+### Next.js (App Router)
+
+I went with Next.js (App Router) because it was a quick way to get a project up and running. I'm
+also very familiar with the complexities and benefits or using the Next.js framework as well as
+hosting on Vercel. Having this understanding early on meant that I could focus on the business logic
+and features of the project, rather than the technical details.
+
+### TypeScript
+
+I went with TypeScript because it's a great way to catch errors at compile time. I can't imagine
+building a complex project without having access to strong typing out of the box.
+
+### Material UI (MUI)
+
+I had to make a choice on a style system. Material UI (MUI) was a good choice because it's built on
+top of Google's Material Design system, it's easy to customize and extend, and it's well-documented.
+
+### GraphQL
+
+I used GraphQL for the query system because I enjoy working with the structure of GraphQL queries
+and mutations. It lets me define the data I need, and the data I want to update, in a way that's
+easy to understand and reason about.
+
+### Tanstack Query
+
+I used Tanstack Query for the query system because it's a great way to manage the state of the
+application. It's easy to use, it's well-documented, and the caching mechanism is great for
+performance.
+
+### Prisma
+
+I used Prisma for the database because it's an efficient way to manage the database schema. I love
+being able to deploy changes to the schema without ever needing to manually run SQL queries.
+
+### PostgreSQL
+
+I used PostgreSQL for the database because it's a mature database that's well-documented and
+well-supported, and it should have no problem scaling to the needs of the project.
+
+### Terraform
+
+I used Terraform for the infrastructure as code because it's a secure and strict way to manage the
+infrastructure of the project. Currently, Terraform is only used to manage some facets of the
+project in AWS, such as S3 and CloudFront. The rest of the hosting is handled by Vercel for the web
+app, and DigitalOcean for the PostgreSQL database.
+
+### NextAuth
+
+I used NextAuth for the authentication system because it's a secure way to manage authentication
+without needing to reinvent the wheel. Amp'd Resume uses email magic link authentication or OAuth
+via Google and LinkedIn.
+
+### OpenAI API
+
+Some LLM features are included in the project, such as the ability to import a PDF resume to match
+the intended structure of the data in the system. Another feature in the works is the ability to
+update a resume based on a provided job description.
+
+## The Future
+
+The future of Amp'd Resume is to continue to expand the features of the project. I'm currently
+working on the ability to update a resume based on a provided job description.
+
+## Open Source
+
+While the backend and primary app for Amp'd Resume are closed source, the theme is open source and
+available on GitHub. This means that anyone can use the theme to create their own resume, or
+customize the theme to their liking. This has been an excellent adventure! We recently celebrated
+our very first public PR. You can find more information about the theme on the
+[GitHub repository](https://github.com/mission-minded-llc/ampdresume-theme).
+
+This theme is bundled up and served as an `npm` package. This means that anyone can use the theme to
+create their own resume and host it outside of the Amp'd Resume platform if they'd like! The
+components accept a specific data structure defined in TypeScript, and will render according to the
+data provided.
+
+If you'd like to support this project, please consider
+[sponsoring me on GitHub](https://github.com/sponsors/missionmike) (or give my repos a star!),
+[buy me a coffee](https://www.buymeacoffee.com/missionmike), and/or
+[follow the page on LinkedIn](https://www.linkedin.com/company/ampdresume/).
