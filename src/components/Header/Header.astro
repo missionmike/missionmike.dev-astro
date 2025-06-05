@@ -88,14 +88,20 @@ const normalizedPath = currentPath === '/' ? '/' : (currentPath.split('/')?.[1] 
 
 <style>
   .header {
+    position: fixed;
+    width: 100%;
     padding: 1rem 0;
     background-color: var(--color-header-bg);
     box-shadow: 0 2px 4px var(--color-shadow);
-    position: sticky;
     top: 0;
     z-index: 100;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+
+    @media (max-width: 1200px) {
+      padding: 1rem;
+      left: 0;
+    }
 
     @media (max-width: 768px) {
       box-shadow: none;
