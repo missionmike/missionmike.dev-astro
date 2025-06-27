@@ -4,12 +4,107 @@ date: '2025-06-26'
 updated: '2025-06-26'
 draft: true
 tags: ['Career']
-featuredImage: blog/career-house-of-cards.jpeg
+featuredImage: blog/career-debugging-nightmare.jpeg
 summary: >
-  ...
+  I'd been contracting with the company for 3 weeks. Production had an issue, and I was asked to
+  help.
 ---
+
+## The Setup
 
 I'd been contracting with the company for 3 weeks.
 
 My onboarding was a bit rough. I was tasked with developing an API middleware to help bridge the gap
-between the company's legacy system and a newer medical billing platform.
+between the company's legacy system and a newer medical billing platform. The principal engineer
+leading the project had set me up with a separate barebones git repository to work in, which didn't
+have any of the actual product's code. We paired and reviewed for a couple of sessions initially,
+but he became busy with other work and I was left to my own devices.
+
+With this time, I made some headway on the API setup, but with minimal details on the implementation
+needs, and no working knowledge or understanding of the product's codebase, there wasn't a whole lot
+I could do.
+
+I began exploring other repositories, and studied the primary product's codebase. I took it upon
+myself to attempt to spin it up and I ran into numerous issues along the way - mainly due to
+outdated documentation and system incompatibilites. With some time and effort, I was able to get it
+running, but I was still missing a lot of the details.
+
+All this to say that I was left with a lot of questions, and there wasn't much communication from
+the lead engineer.
+
+## The Call
+
+One day, I was plugging along, exploring the codebase and learning about the product. I received a
+Zoom call from the Product Manager. He mentioned that they were having some issues with the app, and
+was wondering if I could help to debug it. He mentioned that the Lead Engineer was out of the
+office, so they're checking in with me to see if I could help.
+
+"Sure!" I said. I like to help out, and this seemed like a good opportunity to get to know the
+product better.
+
+At first, I thought it might be a simple issue, nothing too serious. I thought perhaps they were
+giving me a chance to learn more as well as to understand how I approach problems.
+
+I quickly realized that this was not the case.
+
+Soon, the Chief Technology Officer joined the call. Then the Chief Operating Officer. Then others...
+people I hadn't really met yet.
+
+I learned that the issue was that users were unable to login.
+
+At that point in time, I wasn't too familiar with the company's user base. I didn't know how many
+users were struggling to sign in, and I didn't know how many companies or businesses that the issue
+impacted. I honestly didn't want to know.
+
+A big part of staying calm and collected in these situations is to not let the situation get to you.
+Whether the bug or issue is affecting one customer, one thousand, or one million, the root cause is
+the same.
+
+I was able to help them debug the issue, and we were able to get the users back up and running...
+but wow, what an experience!
+
+## The Debugging
+
+To debug, I was told where the login page was located in the repository, so I could start there. I
+was guided to a line in the mid-500s where the Product Manager thought the issue might be ocurring.
+
+I began by adding some server-side logs to see if I could get any more information. I checked out a
+hotfix branch, committed the log statements and pushed, and the Product Manager was able to deploy
+this branch to a specific environment for testing. Thank goodness he was able to do that, because I
+was so fresh in the system that there was no way I'd be deploying anything!
+
+After deploying, the CTO was able to see the logs on production (which I didn't have access to yet),
+and would paste the log results into our Zoom chat.
+
+I realized we weren't seeing anything meaningful, and most of the logs weren't even showing up, so
+the problem must be higher up in the file.
+
+I added more logs starting at the very beginning of the file, and we deployed again.
+
+There! Data. We started to see some details.
+
+The login page itself was lacking in error handling, and there were some linear queries that were
+being made to the database when the page loads and users attempt to log in.
+
+One of the log results after a query showed us that the query was returning an empty result set for
+a specific field... this empty set wasn't accounted for via error handling, and an empty value broke
+everything down the line!
+
+The COO was able to pinpoint the specific data issue in the database, and we were able to fix it.
+
+Voila!
+
+Overall, this process took about an hour. It was intense, there was about a dozen people on the call
+at one point... but my blinders were on. I was focused on the code, getting answers, and finding a
+fix.
+
+## The Aftermath
+
+After the fix, I was able to get a better understanding of the codebase, and I learned more about
+the actual impact of the outage that I helped troubleshoot. Apparently, this issue was a major one,
+and the company was grateful for my help.
+
+I found out the next day that the reason the Lead Engineer was out of the office was because he quit
+without notice after over a decade with the company.
+
+The next chapter is to be written...
